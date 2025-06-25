@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrasi UMKM</title>
-    <link rel="icon" href="/assets/icons/aceed.png">
+    <link rel="icon" href="{{ asset('assets/icons/aceed.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <!-- SweetAlert2 -->
@@ -196,15 +196,23 @@
                         
                         <div>
                             <label for="phone" class="block text-sm font-medium form-label mb-3">
-                                Nomor Telepon <span class="text-red-500">*</span>
+                                Nomor WhatsApp Contact Person <span class="text-red-500">*</span>
                             </label>
-                            <input type="tel" 
-                                   id="phone" 
-                                   name="phone" 
-                                   value="{{ old('phone') }}"
-                                   class="form-input w-full px-4 py-3 rounded-xl" 
-                                   placeholder="Contoh: 08123456789" 
-                                   required>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 font-medium">+62</span>
+                                </div>
+                                <input type="text" 
+                                    id="phone" 
+                                    name="phone" 
+                                    value="{{ old('phone') }}"
+                                    class="form-input w-full pl-14 pr-4 py-3 rounded-xl" 
+                                    placeholder="8123456789" 
+                                    pattern="[0-9]{9,13}"
+                                    title="Masukkan nomor telepon tanpa +62, contoh: 8123456789"
+                                    required>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Format: +62 diikuti nomor tanpa 0 di depan</p>
                         </div>
                         
                         <div>
@@ -219,10 +227,53 @@
                                    placeholder="Masukkan email aktif" 
                                    required>
                         </div>
-                    </div>
 
-                    <!-- Right Column -->
-                    <div class="space-y-6">
+                        <div>
+                            <label for="password" class="block text-sm font-medium form-label mb-3">
+                                Password <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    class="w-full px-4 py-3 pr-12 rounded-xl" 
+                                    placeholder="Masukkan password" 
+                                    minlength="8"
+                                    required>
+                                <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-green-600">
+                                    <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    <svg id="eyeOffIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-600">
+                                <p>Password harus minimal 8 karakter dan mengandung:</p>
+                                <ul class="list-disc list-inside mt-1 space-y-1">
+                                    <li id="length-check" class="text-red-500">Minimal 8 karakter</li>
+                                    <li id="uppercase-check" class="text-red-500">Huruf besar (A-Z)</li>
+                                    <li id="lowercase-check" class="text-red-500">Huruf kecil (a-z)</li>
+                                    <li id="number-check" class="text-red-500">Angka (0-9)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="password_confirmation" class="block text-sm font-medium form-label mb-3">
+                                Konfirmasi Password <span class="text-red-500">*</span>
+                            </label>
+                            <input type="password" 
+                                id="password_confirmation" 
+                                name="password_confirmation" 
+                                class="w-full px-4 py-3 rounded-xl" 
+                                placeholder="Masukkan ulang password" 
+                                required>
+                            <p id="password-match" class="text-xs mt-1 hidden"></p>
+                        </div>
+
                         <div>
                             <label for="type" class="flex items-center text-sm font-medium form-label mb-3">
                                 <span>Bidang UMKM <span class="text-red-500">*</span></span>
@@ -236,7 +287,7 @@
                                     name="type" 
                                     required 
                                     class="form-input w-full px-4 py-3 rounded-xl">
-                                <option value="">Pilih Bidang UMKM</option>
+                                <option value=""disabled selected hidden>Pilih Bidang UMKM</option>
                                 <option value="kuliner" {{ old('type') == 'kuliner' ? 'selected' : '' }}>Kuliner</option>
                                 <option value="fashion" {{ old('type') == 'fashion' ? 'selected' : '' }}>Fashion & Tekstil</option>
                                 <option value="kerajinan" {{ old('type') == 'kerajinan' ? 'selected' : '' }}>Kerajinan Tangan</option>
@@ -246,7 +297,22 @@
                                 <option value="lainnya" {{ old('type') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                             </select>
                         </div>
-                        
+
+                        <div>
+                            <label for="description" class="block text-sm font-medium form-label mb-3">
+                                Deskripsi UMKM <span class="text-red-500">*</span>
+                            </label>
+                            <textarea id="description" 
+                                      name="description" 
+                                      rows="4" 
+                                      class="form-input w-full px-4 py-3 rounded-xl resize-none" 
+                                      placeholder="Deskripsikan produk/jasa UMKM Anda..." 
+                                      required>{{ old('description') }}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="space-y-6">                     
                         <!-- Logo upload field -->
                         <div>
                             <label for="logo" class="block text-sm font-medium form-label mb-3">
@@ -278,17 +344,35 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div>
-                            <label for="description" class="block text-sm font-medium form-label mb-3">
-                                Deskripsi UMKM <span class="text-red-500">*</span>
+                            <label for="proposal" class="block text-sm font-medium form-label mb-3">
+                                Upload Proposal Bisnis Anda <span class="text-red-500">*</span>
                             </label>
-                            <textarea id="description" 
-                                      name="description" 
-                                      rows="4" 
-                                      class="form-input w-full px-4 py-3 rounded-xl resize-none" 
-                                      placeholder="Deskripsikan produk/jasa UMKM Anda..." 
-                                      required>{{ old('description') }}</textarea>
+                            <div id="proposalUploadArea" class="upload-area rounded-xl p-6 text-center">
+                                <input type="file" id="proposal" name="proposal" class="hidden" accept="application/pdf,.doc,.docx">
+                                
+                                <!-- Upload placeholder -->
+                                <div id="proposalUploadPlaceholder">
+                                    <div class="mx-auto w-16 h-16 bg-gradient-to-br from-amber-400 to-green-500 rounded-full flex items-center justify-center mb-4 floating-icon">
+                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4l2 4h7a2 2 0 012 2v6a4 4 0 01-4 4H7z"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm font-medium text-gray-700 mb-2">Klik untuk upload atau drag & drop</p>
+                                    <p class="text-xs text-gray-500">PDF, DOC, DOCX (max. 5MB)</p>
+                                </div>
+                                
+                                <!-- File preview -->
+                                <div id="proposalFilePreview" class="hidden">
+                                    <div class="relative inline-block preview-container">
+                                        <p id="proposalFileName" class="text-sm text-gray-600 font-medium"></p>
+                                        <button type="button" id="removeproposalFile" class="absolute -top-2 -right-2 remove-btn text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold">
+                                            ×
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -358,6 +442,85 @@
             const previewImg = document.getElementById('previewImg');
             const fileName = document.getElementById('fileName');
             const removeImageBtn = document.getElementById('removeImage');
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.getElementById('togglePassword');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const eyeOffIcon = document.getElementById('eyeOffIcon');
+
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                eyeIcon.classList.toggle('hidden');
+                eyeOffIcon.classList.toggle('hidden');
+            });
+
+            const passwordConfirmation = document.getElementById('password_confirmation');
+            const lengthCheck = document.getElementById('length-check');
+            const uppercaseCheck = document.getElementById('uppercase-check');
+            const lowercaseCheck = document.getElementById('lowercase-check');
+            const numberCheck = document.getElementById('number-check');
+            const passwordMatch = document.getElementById('password-match');
+
+            passwordInput.addEventListener('input', (e) => {
+                const password = e.target.value;
+                
+                // Length check
+                if (password.length >= 8) {
+                    lengthCheck.classList.remove('text-red-500');
+                    lengthCheck.classList.add('text-green-500');
+                } else {
+                    lengthCheck.classList.remove('text-green-500');
+                    lengthCheck.classList.add('text-red-500');
+                }
+                
+                // Uppercase check
+                if (/[A-Z]/.test(password)) {
+                    uppercaseCheck.classList.remove('text-red-500');
+                    uppercaseCheck.classList.add('text-green-500');
+                } else {
+                    uppercaseCheck.classList.remove('text-green-500');
+                    uppercaseCheck.classList.add('text-red-500');
+                }
+                
+                // Lowercase check
+                if (/[a-z]/.test(password)) {
+                    lowercaseCheck.classList.remove('text-red-500');
+                    lowercaseCheck.classList.add('text-green-500');
+                } else {
+                    lowercaseCheck.classList.remove('text-green-500');
+                    lowercaseCheck.classList.add('text-red-500');
+                }
+                
+                // Number check
+                if (/[0-9]/.test(password)) {
+                    numberCheck.classList.remove('text-red-500');
+                    numberCheck.classList.add('text-green-500');
+                } else {
+                    numberCheck.classList.remove('text-green-500');
+                    numberCheck.classList.add('text-red-500');
+                }
+            });
+
+            // Password confirmation check
+            passwordConfirmation.addEventListener('input', (e) => {
+                const password = passwordInput.value;
+                const confirmation = e.target.value;
+                
+                if (confirmation.length > 0) {
+                    passwordMatch.classList.remove('hidden');
+                    if (password === confirmation) {
+                        passwordMatch.textContent = 'Password cocok';
+                        passwordMatch.classList.remove('text-red-500');
+                        passwordMatch.classList.add('text-green-500');
+                    } else {
+                        passwordMatch.textContent = 'Password tidak cocok';
+                        passwordMatch.classList.remove('text-green-500');
+                        passwordMatch.classList.add('text-red-500');
+                    }
+                } else {
+                    passwordMatch.classList.add('hidden');
+                }
+            });
 
             // File upload functionality
             uploadArea.addEventListener('click', () => logoInput.click());
@@ -396,7 +559,7 @@
                 if (!file.type.startsWith('image/')) {
                     Swal.fire({
                         icon: 'error',
-                        title: '❌ Format File Salah',
+                        title: 'Format File Salah',
                         text: 'Hanya file gambar yang diperbolehkan!',
                         confirmButtonColor: '#22c55e',
                         background: 'linear-gradient(135deg, #fef3c7 0%, #dcfce7 100%)'
@@ -407,7 +570,7 @@
                 if (file.size > 2 * 1024 * 1024) {
                     Swal.fire({
                         icon: 'error',
-                        title: '📏 File Terlalu Besar',
+                        title: 'File Terlalu Besar',
                         text: 'Ukuran file maksimal 2MB!',
                         confirmButtonColor: '#22c55e',
                         background: 'linear-gradient(135deg, #fef3c7 0%, #dcfce7 100%)'
@@ -444,6 +607,17 @@
                 const formData = new FormData(form);
                 const submitBtn = form.querySelector('button[type="submit"]');
                 const originalText = submitBtn.textContent;
+
+                // Sebelum submit, tambahkan +62 ke nomor
+                const phoneValue = phoneInput.value;
+                if (phoneValue && !phoneValue.startsWith('+62')) {
+                    // Buat input hidden untuk menyimpan nomor lengkap
+                    const hiddenPhone = document.createElement('input');
+                    hiddenPhone.type = 'hidden';
+                    hiddenPhone.name = 'full_phone';
+                    hiddenPhone.value = '+62' + phoneValue;
+                    form.appendChild(hiddenPhone);
+                }       
                 
                 // Show loading
                 Swal.fire({
@@ -478,7 +652,7 @@
                     if (data.success) {
                         Swal.fire({
                             icon: 'success',
-                            title: '🎉 Pendaftaran Berhasil!',
+                            title: 'Pendaftaran Berhasil!',
                             text: data.message || 'Pendaftaran UMKM Anda telah berhasil dikirim!',
                             confirmButtonColor: '#22c55e',
                             background: 'linear-gradient(135deg, #fef3c7 0%, #dcfce7 100%)'
@@ -500,7 +674,7 @@
                             
                             Swal.fire({
                                 icon: 'error',
-                                title: '❌ Terjadi Kesalahan',
+                                title: 'Terjadi Kesalahan',
                                 html: errorMessages.join('<br>'),
                                 confirmButtonColor: '#22c55e',
                                 background: 'linear-gradient(135deg, #fef3c7 0%, #dcfce7 100%)'
@@ -508,7 +682,7 @@
                         } else {
                             Swal.fire({
                                 icon: 'error',
-                                title: '❌ Terjadi Kesalahan',
+                                title: 'Terjadi Kesalahan',
                                 text: data.message || 'Silakan periksa kembali data yang Anda masukkan!',
                                 confirmButtonColor: '#22c55e',
                                 background: 'linear-gradient(135deg, #fef3c7 0%, #dcfce7 100%)'
@@ -523,7 +697,7 @@
 
                     Swal.fire({
                         icon: 'error',
-                        title: '❌ Koneksi Bermasalah',
+                        title: 'Koneksi Bermasalah',
                         text: 'Terjadi kesalahan jaringan. Silakan coba lagi nanti!',
                         confirmButtonColor: '#22c55e',
                         background: 'linear-gradient(135deg, #fef3c7 0%, #dcfce7 100%)'
@@ -572,10 +746,42 @@
                 });
             });
 
-            // Phone input validation (only numbers)
             const phoneInput = document.getElementById('phone');
+        
             phoneInput.addEventListener('input', (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                let value = e.target.value.replace(/[^0-9]/g, '');
+                
+                // Jika user mengetik 0 di awal, hapus
+                if (value.startsWith('0')) {
+                    value = value.substring(1);
+                }
+
+                // Batasi maksimal 13 digit (untuk nomor Indonesia)
+                if (value.length > 13) {
+                    value = value.substring(0, 13);
+                }
+
+                // Minimal 9 digit, maksimal 13 digit
+                e.target.value = value;
+                
+                // Visual feedback
+                if (value.length >= 9 && value.length <= 13) {
+                    phoneInput.classList.add('success-border');
+                    phoneInput.classList.remove('error-border');
+                } else if (value.length > 0) {
+                    phoneInput.classList.add('error-border');
+                    phoneInput.classList.remove('success-border');
+                } else {
+                    phoneInput.classList.remove('success-border', 'error-border');
+                }
+            });
+
+            phoneInput.addEventListener('blur', () => {
+                const value = phoneInput.value;
+                if (value.length > 0 && (value.length < 9 || value.length > 13)) {
+                    phoneInput.classList.add('error-border');
+                    phoneInput.classList.remove('success-border');
+                }
             });
 
             // Email input validation feedback
@@ -601,7 +807,7 @@
                 
                 Swal.fire({
                     icon: 'error',
-                    title: '❌ Terjadi Kesalahan',
+                    title: 'Terjadi Kesalahan',
                     html: errorMessages.join('<br>'),
                     confirmButtonColor: '#22c55e',
                     background: 'linear-gradient(135deg, #fef3c7 0%, #dcfce7 100%)'
@@ -612,7 +818,7 @@
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: '🎉 Berhasil!',
+                    title: 'Berhasil!',
                     text: '{{ session('success') }}',
                     confirmButtonColor: '#22c55e',
                     background: 'linear-gradient(135deg, #fef3c7 0%, #dcfce7 100%)'
@@ -623,12 +829,60 @@
             @if (session('error'))
                 Swal.fire({
                     icon: 'error',
-                    title: '❌ Terjadi Kesalahan',
+                    title: 'Terjadi Kesalahan',
                     text: '{{ session('error') }}',
                     confirmButtonColor: '#22c55e',
                     background: 'linear-gradient(135deg, #fef3c7 0%, #dcfce7 100%)'
                 });
             @endif
+
+            const proposalUploadArea = document.getElementById('proposalUploadArea');
+            const proposalInput = document.getElementById('proposal');
+            const proposalUploadPlaceholder = document.getElementById('proposalUploadPlaceholder');
+            const proposalFilePreview = document.getElementById('proposalFilePreview');
+            const proposalFileName = document.getElementById('proposalFileName');
+            const removeProposalFile = document.getElementById('removeProposalFile');
+
+            proposalUploadArea.addEventListener('click', () => proposalInput.click());
+
+            proposalUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                proposalUploadArea.classList.add('border-blue-500', 'bg-blue-50');
+            });
+
+            proposalUploadArea.addEventListener('dragleave', () => {
+                proposalUploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+            });
+
+            proposalUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                proposalUploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+                const file = e.dataTransfer.files[0];
+                handleProposalFile(file);
+            });
+
+            proposalInput.addEventListener('change', () => {
+                const file = proposalInput.files[0];
+                handleProposalFile(file);
+            });
+
+            function handleProposalFile(file) {
+                if (file && ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(file.type) && file.size <= 5 * 1024 * 1024) {
+                    proposalFileName.textContent = file.name;
+                    proposalUploadPlaceholder.classList.add('hidden');
+                    proposalFilePreview.classList.remove('hidden');
+                } else {
+                    alert('Silakan pilih file dokumen (PDF, DOC, DOCX) dengan ukuran maksimum 5MB.');
+                    proposalInput.value = '';
+                }
+            }
+
+            removeProposalFile.addEventListener('click', () => {
+                proposalInput.value = '';
+                proposalUploadPlaceholder.classList.remove('hidden');
+                proposalFilePreview.classList.add('hidden');
+                proposalFileName.textContent = '';
+            });
         });
     </script>
 </body>

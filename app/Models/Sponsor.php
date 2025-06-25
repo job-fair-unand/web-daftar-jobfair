@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Sponsor extends Model
 {
     protected $fillable = [
+        'user_id',
         'name',
         'address',
         'phone',
         'email',
         'logo',
         'sponsor_package',
+        'mou',
         'wish_for_event',
     ];
 
@@ -21,6 +23,14 @@ class Sponsor extends Model
         'updated_at' => 'datetime',
     ];
 
+    /**
+     * Relasi dengan User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     // Accessor untuk mendapatkan URL logo
     public function getLogoUrlAttribute()
     {
@@ -28,6 +38,15 @@ class Sponsor extends Model
             return asset('storage/sponsor/logos/' . $this->logo);
         }
         return asset('assets/icons/aceed.png');
+    }
+
+    // Accessor untuk mendapatkan URL MOU
+    public function getMouUrlAttribute()
+    {
+        if ($this->mou) {
+            return asset('storage/sponsor/mou/' . $this->mou);
+        }
+        return null;
     }
 
     // Accessor untuk mendapatkan nama paket yang lebih readable

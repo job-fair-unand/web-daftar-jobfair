@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sponsors', function (Blueprint $table) {
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->id();
             $table->string('name');
             $table->string('address')->nullable();
@@ -19,6 +20,7 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('logo')->nullable();
             $table->string('sponsor_package');
+            $table->string('mou');
             $table->text('wish_for_event');
             $table->timestamps();
         });

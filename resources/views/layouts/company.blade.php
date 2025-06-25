@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title') - Company Job Fair</title>
-    <link rel="icon" href="/assets/icons/aceed.png">
+    <link rel="icon" href="{{ asset('assets/icons/aceed.png') }}">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -25,7 +25,7 @@
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Navbar -->
-            @include('partials.navbar')
+            @include('partials.navbar-user')
             
             <!-- Page Content -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4">
@@ -33,7 +33,7 @@
             </main>
 
             <!-- Footer -->
-            @include('partials.footer')
+            @include('partials.footer-user')
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
