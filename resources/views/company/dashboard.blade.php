@@ -265,9 +265,13 @@
 
         <!-- Button Pilih Booth -->
         <div class="mt-6 text-center">
-            <button id="pilih-booth-btn" class="px-4 py-2 bg-gray-400 text-white rounded shadow cursor-not-allowed" disabled>
-                Pilih Booth
-            </button>
+            <form id="pilih-booth-form" action="{{ route('company.pilih-booth') }}" method="POST" style="display:inline;">
+                @csrf
+                <input type="hidden" name="booths" id="booths-input">
+                <button id="pilih-booth-btn" class="px-4 py-2 bg-gray-400 text-white rounded shadow cursor-not-allowed" disabled>
+                    Pilih Booth
+                </button>
+            </form>
         </div>
 
         <!-- Script untuk interaktivitas -->
@@ -300,9 +304,11 @@
                     });
                 });
 
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
                     const boothData = Array.from(selectedBooths).map(booth => booth.dataset.id);
-                    alert(`Booth yang dipilih: ${boothData.join(', ')}`);
+                    document.getElementById('booths-input').value = boothData.join(',');
+                    document.getElementById('pilih-booth-form').submit();
                 });
             });
         </script>

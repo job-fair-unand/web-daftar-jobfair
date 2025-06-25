@@ -5,494 +5,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dewi Booth - Payment</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .booth-container {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-            padding: 40px;
-            width: 100%;
-            max-width: 600px;
-            backdrop-filter: blur(10px);
-        }
-
-        .booth-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .booth-title {
-            font-size: 2.8em;
-            font-weight: 800;
-            background: linear-gradient(135deg, #d4af37, #b8860b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .booth-subtitle {
-            color: #64748b;
-            font-size: 1.1em;
-            font-weight: 500;
-        }
-
-        .section {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-
-        .section:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .section-title {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-icon {
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, #d4af37, #b8860b);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 16px;
-        }
-
-        .detail-item {
-            background: white;
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .detail-label {
-            font-weight: 600;
-            color: #475569;
-            font-size: 0.9em;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .detail-value {
-            font-size: 1.1em;
-            color: #1e293b;
-            font-weight: 600;
-        }
-
-        .price-display {
-            background: linear-gradient(135deg, #2d6a4f, #1b4332);
-            color: #d4af37;
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            font-size: 2em;
-            font-weight: 800;
-            box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
-            border: 2px solid #d4af37;
-        }
-
-        .bank-info {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            border: 2px solid #2d6a4f;
-            margin-top: 16px;
-        }
-
-        .bank-details {
-            flex: 1;
-        }
-
-        .bank-name {
-            font-weight: 700;
-            color: #1e293b;
-            font-size: 1.2em;
-            margin-bottom: 4px;
-        }
-
-        .account-number {
-            font-family: 'Courier New', monospace;
-            font-size: 1.4em;
-            font-weight: 700;
-            color: #2d6a4f;
-            margin-bottom: 4px;
-        }
-
-        .account-name {
-            color: #64748b;
-            font-size: 1em;
-        }
-
-        .copy-btn {
-            background: #2d6a4f;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .copy-btn:hover {
-            background: #1b4332;
-            transform: scale(1.05);
-        }
-
-        .upload-area {
-            border: 2px dashed #cbd5e1;
-            border-radius: 12px;
-            padding: 40px 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            background: white;
-        }
-
-        .upload-area:hover {
-            border-color: #2d6a4f;
-            background: #f8fafc;
-        }
-
-        .upload-area.dragover {
-            border-color: #d4af37;
-            background: #fffbeb;
-        }
-
-        .upload-icon {
-            font-size: 3em;
-            color: #cbd5e1;
-            margin-bottom: 16px;
-        }
-
-        .upload-text {
-            color: #64748b;
-            font-size: 1.1em;
-            margin-bottom: 8px;
-        }
-
-        .upload-subtext {
-            color: #94a3b8;
-            font-size: 0.9em;
-        }
-
-        .file-input {
-            display: none;
-        }
-
-        .uploaded-file {
-            background: #f0fdf4;
-            border: 1px solid #2d6a4f;
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .file-icon {
-            width: 40px;
-            height: 40px;
-            background: #2d6a4f;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .file-info {
-            flex: 1;
-        }
-
-        .file-name {
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .file-size {
-            color: #64748b;
-            font-size: 0.9em;
-        }
-
-        .remove-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-
-        .submit-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #d4af37, #b8860b);
-            color: #1b4332;
-            border: none;
-            padding: 18px;
-            font-size: 1.2em;
-            font-weight: 700;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4);
-            background: linear-gradient(135deg, #b8860b, #d4af37);
-        }
-
-        .submit-btn:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        @media (max-width: 768px) {
-            .booth-container {
-                padding: 24px;
-                margin: 10px;
-            }
-
-            .booth-title {
-                font-size: 2.2em;
-            }
-
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .bank-info {
-                flex-direction: column;
-                gap: 16px;
-                text-align: center;
-            }
-
-            .price-display {
-                font-size: 1.6em;
-            }
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-    <div class="booth-container">
-        <div class="booth-header">
-            <h1 class="booth-title">Dewi Booth</h1>
-            <p class="booth-subtitle">Sistem Pembayaran Booth</p>
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1b4332] to-[#2d6a4f]">
+    <div class="w-full max-w-3xl bg-white/90 rounded-3xl shadow-2xl p-8 flex flex-col gap-0 justify-center">
+        <a href="/company/dashboard"
+           class="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/60 border border-yellow-400 shadow-md backdrop-blur-md text-[#2d6a4f] font-bold text-base mb-6 transition-all duration-200 hover:bg-yellow-400/90 hover:text-[#1b4332] hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-400/60">
+            <svg class="w-6 h-6 text-yellow-500 group-hover:-translate-x-1 group-hover:text-[#1b4332] transition-all duration-200"
+                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Kembali ke Dashboard
+        </a>
+        <div class="mb-6">
+            <h1 class="text-3xl font-extrabold bg-gradient-to-r from-yellow-400 to-yellow-700 bg-clip-text text-transparent tracking-wide mb-1">Dewi Booth</h1>
+            <p class="text-slate-500 font-medium">Sistem Pembayaran Booth</p>
         </div>
-
-        <!-- Detail Booth Section -->
-        <div class="section">
-            <h2 class="section-title">
-                <div class="section-icon">📋</div>
-                Detail Booth
-            </h2>
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <div class="detail-label">Jenis Booth</div>
-                    <div class="detail-value">Platinum</div>
+        @if(isset($booths) && $booths[0] !== '')
+            <div class="bg-green-50 border border-green-700 rounded-xl p-4 mb-4">
+                <div class="flex items-center gap-2 mb-2">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 text-yellow-600"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4"/></svg>
+                    <span class="font-bold text-green-900">Booth yang Dipilih</span>
                 </div>
-                <div class="detail-item">
-                    <div class="detail-label">Lokasi</div>
-                    <div class="detail-value">Area A - Stand 15</div>
+                <div class="flex flex-wrap gap-2">
+                    @foreach($booths as $booth)
+                        <span class="bg-gradient-to-r from-[#2d6a4f] to-yellow-400 text-white px-3 py-1 rounded-full font-semibold text-sm shadow">{{ $booth }}</span>
+                    @endforeach
                 </div>
-                <div class="detail-item">
-                    <div class="detail-label">Ukuran Booth</div>
-                    <div class="detail-value">3x4m</div>
+            </div>
+        @endif
+        <div class="border-t border-slate-200 my-6"></div>
+        <div class="flex flex-col md:flex-row gap-4">
+            <div class="bg-slate-50 rounded-xl p-4 flex-1 border border-slate-200 shadow-sm">
+                <div class="flex items-center gap-2 mb-3">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 text-yellow-600"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 2v4M16 2v4M2 10h20"/></svg>
+                    <span class="font-bold text-slate-800">Detail Booth</span>
                 </div>
-                <div class="detail-item">
-                    <div class="detail-label">Gambar Booth</div>
-                    <div class="detail-value">
-                        <img src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=300&h=200&fit=crop&crop=center"
-                            alt="Booth Platinum"
-                            style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid #d4af37;">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="bg-white rounded-lg border border-slate-200 p-3">
+                        <div class="text-xs font-semibold text-slate-500 uppercase mb-1">Jenis Booth</div>
+                        <div class="font-bold text-slate-800">Platinum</div>
+                    </div>
+                    <div class="bg-white rounded-lg border border-slate-200 p-3">
+                        <div class="text-xs font-semibold text-slate-500 uppercase mb-1">Lokasi</div>
+                        <div class="font-bold text-slate-800">Area A - Stand 15</div>
+                    </div>
+                    <div class="bg-white rounded-lg border border-slate-200 p-3">
+                        <div class="text-xs font-semibold text-slate-500 uppercase mb-1">Ukuran Booth</div>
+                        <div class="font-bold text-slate-800">3x4m</div>
+                    </div>
+                    <div class="bg-white rounded-lg border border-slate-200 p-3">
+                        <div class="text-xs font-semibold text-slate-500 uppercase mb-1">Gambar Booth</div>
+                        <img src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=300&h=200&fit=crop&crop=center" alt="Booth Platinum" class="w-full h-16 object-cover rounded-md border-2 border-yellow-400">
+                    </div>
+                </div>
+            </div>
+            <div class="bg-slate-50 rounded-xl p-4 flex flex-col gap-4 border border-slate-200 shadow-sm max-w-xs w-full">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 text-yellow-600"><path d="M12 1v22M19 5H5v14h14V5z"/></svg>
+                        <span class="font-bold text-slate-800">Total Pembayaran</span>
+                    </div>
+                    <div class="bg-gradient-to-r from-[#2d6a4f] to-[#1b4332] text-yellow-400 px-4 py-3 rounded-lg text-center text-lg font-extrabold border-2 border-yellow-400 shadow">Rp. 2.500.000</div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-2 mt-4">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 text-yellow-600"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 3v4M8 3v4"/></svg>
+                        <span class="font-bold text-slate-800">Informasi Rekening</span>
+                    </div>
+                    <div class="bg-white border-2 border-[#2d6a4f] rounded-lg p-3 flex flex-col gap-1">
+                        <div class="font-bold text-slate-800">Bank Central Asia (BCA)</div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-mono text-base font-bold text-[#2d6a4f]">1234567890</span>
+                            <button id="copyBtn" type="button" class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-[#2d6a4f] text-white font-semibold text-sm hover:bg-[#1b4332] transition focus:outline-none focus:ring-2 focus:ring-yellow-400" onclick="copyAccountNumber(event)">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16.5V19a2.5 2.5 0 002.5 2.5h7A2.5 2.5 0 0020 19V8.5A2.5 2.5 0 0017.5 6h-7A2.5 2.5 0 008 8.5V11" /><path stroke-linecap="round" stroke-linejoin="round" d="M16 3.5V6a2.5 2.5 0 01-2.5 2.5h-7A2.5 2.5 0 014 6V3.5A2.5 2.5 0 016.5 1h7A2.5 2.5 0 0116 3.5z" /></svg>
+                                <span id="copyBtnText">Copy</span>
+                            </button>
+                        </div>
+                        <div class="text-slate-500 text-sm">a.n. Dewi Sartika</div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Harga Section -->
-        <div class="section">
-            <h2 class="section-title">
-                <div class="section-icon">💰</div>
-                Total Pembayaran
-            </h2>
-            <div class="price-display">
-                Rp. 2.500.000
+        <div class="border-t border-slate-200 my-6"></div>
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 shadow-sm">
+            <div class="flex items-center gap-2 mb-3">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 text-yellow-600"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4"/></svg>
+                <span class="font-bold text-slate-800">Upload Bukti Pembayaran</span>
             </div>
-        </div>
-
-        <!-- Rekening Section -->
-        <div class="section">
-            <h2 class="section-title">
-                <div class="section-icon">🏦</div>
-                Informasi Rekening
-            </h2>
-            <div class="bank-info">
-                <div class="bank-details">
-                    <div class="bank-name">Bank Central Asia (BCA)</div>
-                    <div class="account-number">1234567890</div>
-                    <div class="account-name">a.n. Dewi Sartika</div>
+            <label for="fileInput" class="block border-2 border-dashed border-slate-300 rounded-lg p-6 text-center cursor-pointer bg-white hover:border-[#2d6a4f] hover:bg-green-50 transition">
+                <div class="text-3xl mb-2">📁</div>
+                <div class="text-slate-500 mb-1">Klik atau drag & drop file di sini</div>
+                <div class="text-slate-400 text-sm">Format: JPG, PNG, PDF (Maksimal 5MB)</div>
+                <input type="file" id="fileInput" class="hidden" accept=".jpg,.jpeg,.png,.pdf" onchange="handleFileSelect(event)">
+            </label>
+            <div id="uploadedFile" class="flex items-center gap-3 bg-green-50 border border-[#2d6a4f] rounded-lg p-3 mt-4" style="display: none;">
+                <span id="filePreview"></span>
+                <div class="flex-1">
+                    <div class="font-semibold text-slate-800" id="fileName"></div>
+                    <div class="text-slate-500 text-xs" id="fileSize"></div>
                 </div>
-                <button class="copy-btn" onclick="copyAccountNumber()">📋 Copy</button>
+                <button class="bg-red-500 text-white rounded-md px-3 py-1 text-xs font-semibold hover:bg-red-600 transition" onclick="removeFile()">Hapus</button>
+            </div>
+            <div class="mt-6"></div>
+            <button
+                id="submitBtn"
+                disabled
+                onclick="submitPayment()"
+                class="group relative w-full flex justify-center items-center px-8 py-4 bg-gradient-to-r from-yellow-400 to-yellow-700 text-[#1b4332] font-bold text-lg rounded-2xl shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-yellow-400/50 overflow-hidden
+                    hover:from-yellow-500 hover:to-yellow-800 hover:scale-105 hover:shadow-yellow-300/40 active:scale-95 disabled:bg-slate-300 disabled:text-slate-400"
+            >
+                <span class="relative z-10 flex items-center space-x-2">
+                    <span class="text-white">Kirim Bukti Pembayaran</span>
+                    <svg class="w-5 h-5 text-white group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </span>
+                <!-- Ripple effect -->
+                <span class="absolute inset-0 rounded-2xl bg-white opacity-0 group-active:opacity-10 transition duration-300"></span>
+            </button>
+        </div>
+        <div id="modalSuccess" class="fixed inset-0 bg-black/30 flex items-center justify-center z-50" style="display:none;">
+            <div class="bg-white rounded-2xl p-8 shadow-xl text-center max-w-xs w-full">
+                <div class="text-4xl mb-2">🎉</div>
+                <h2 class="text-xl font-bold text-[#2d6a4f] mb-2">Bukti Pembayaran Berhasil Dikirim!</h2>
+                <p class="text-slate-600 mb-4">Tim kami akan segera memverifikasi pembayaran Anda.<br>Terima kasih telah melakukan pembayaran booth.</p>
+                <button class="bg-gradient-to-r from-yellow-400 to-yellow-700 text-[#1b4332] font-bold py-2 px-6 rounded-lg hover:from-yellow-500 hover:to-yellow-800 transition" onclick="closeModal()">Tutup</button>
             </div>
         </div>
-
-        <!-- Upload Bukti Pembayaran Section -->
-        <div class="section">
-            <h2 class="section-title">
-                <div class="section-icon">📄</div>
-                Upload Bukti Pembayaran
-            </h2>
-            <div class="upload-area" onclick="document.getElementById('fileInput').click()"
-                ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragenter="handleDragEnter(event)"
-                ondragleave="handleDragLeave(event)">
-                <div class="upload-icon">📁</div>
-                <div class="upload-text">Klik atau drag & drop file di sini</div>
-                <div class="upload-subtext">Format: JPG, PNG, PDF (Maksimal 5MB)</div>
-            </div>
-            <input type="file" id="fileInput" class="file-input" accept=".jpg,.jpeg,.png,.pdf"
-                onchange="handleFileSelect(event)">
-            <div id="uploadedFile" class="uploaded-file" style="display: none;">
-                <div class="file-icon">📄</div>
-                <div class="file-info">
-                    <div class="file-name" id="fileName"></div>
-                    <div class="file-size" id="fileSize"></div>
-                </div>
-                <button class="remove-btn" onclick="removeFile()">❌</button>
-            </div>
-        </div>
-
-        <button class="submit-btn" id="submitBtn" disabled onclick="submitPayment()">
-            Kirim Bukti Pembayaran
-        </button>
     </div>
-
     <script>
         let uploadedFile = null;
-
-        function copyAccountNumber() {
+        function copyAccountNumber(event) {
             const accountNumber = '1234567890';
             navigator.clipboard.writeText(accountNumber).then(() => {
-                const btn = event.target;
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '✅ Copied!';
-                btn.style.background = '#2d6a4f';
+                const btn = document.getElementById('copyBtn');
+                const btnText = document.getElementById('copyBtnText');
+                btnText.textContent = 'Tersalin!';
+                btn.classList.add('bg-yellow-400', 'text-[#1b4332]');
                 setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.style.background = '#2d6a4f';
-                }, 2000);
+                    btnText.textContent = 'Copy';
+                    btn.classList.remove('bg-yellow-400', 'text-[#1b4332]');
+                }, 1500);
             });
         }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-        }
-
-        function handleDragEnter(e) {
-            e.preventDefault();
-            e.target.closest('.upload-area').classList.add('dragover');
-        }
-
-        function handleDragLeave(e) {
-            e.preventDefault();
-            e.target.closest('.upload-area').classList.remove('dragover');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            e.target.closest('.upload-area').classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                processFile(files[0]);
-            }
-        }
-
         function handleFileSelect(e) {
             const file = e.target.files[0];
             if (file) {
                 processFile(file);
             }
         }
-
         function processFile(file) {
-            // Validasi file
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
-            const maxSize = 5 * 1024 * 1024; // 5MB
-
+            const maxSize = 5 * 1024 * 1024;
             if (!allowedTypes.includes(file.type)) {
                 alert('Format file tidak didukung. Gunakan JPG, PNG, atau PDF.');
                 return;
             }
-
             if (file.size > maxSize) {
                 alert('Ukuran file terlalu besar. Maksimal 5MB.');
                 return;
             }
-
             uploadedFile = file;
             displayUploadedFile(file);
             updateSubmitButton();
         }
-
         function displayUploadedFile(file) {
             const fileName = document.getElementById('fileName');
             const fileSize = document.getElementById('fileSize');
             const uploadedFileDiv = document.getElementById('uploadedFile');
-
+            const filePreview = document.getElementById('filePreview');
             fileName.textContent = file.name;
             fileSize.textContent = formatFileSize(file.size);
             uploadedFileDiv.style.display = 'flex';
+            filePreview.innerHTML = '';
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.className = 'w-12 h-12 object-cover rounded border border-yellow-400 mr-2';
+                img.src = URL.createObjectURL(file);
+                img.onload = () => URL.revokeObjectURL(img.src);
+                filePreview.appendChild(img);
+            }
         }
-
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
             const k = 1024;
@@ -500,35 +195,39 @@
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
-
         function removeFile() {
             uploadedFile = null;
             document.getElementById('uploadedFile').style.display = 'none';
             document.getElementById('fileInput').value = '';
             updateSubmitButton();
         }
-
         function updateSubmitButton() {
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = !uploadedFile;
         }
-
         function submitPayment() {
             if (!uploadedFile) {
                 alert('Silakan upload bukti pembayaran terlebih dahulu.');
                 return;
             }
-
-            // Simulasi submit
             const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerHTML = '⏳ Mengirim...';
+            submitBtn.innerHTML = '<span class="inline-block align-middle">⏳</span> Mengirim...';
             submitBtn.disabled = true;
-
             setTimeout(() => {
-                alert('Bukti pembayaran berhasil dikirim! Tim kami akan segera memverifikasi pembayaran Anda.');
                 submitBtn.innerHTML = '✅ Berhasil Dikirim';
-                submitBtn.style.background = 'linear-gradient(135deg, #2d6a4f, #1b4332)';
+                submitBtn.classList.add('bg-gradient-to-r', 'from-[#2d6a4f]', 'to-[#1b4332]', 'text-yellow-400');
+                showModal();
             }, 2000);
+        }
+        function showModal() {
+            document.getElementById('modalSuccess').style.display = 'flex';
+        }
+        function closeModal() {
+            document.getElementById('modalSuccess').style.display = 'none';
+            removeFile();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = 'Kirim Bukti Pembayaran';
+            submitBtn.classList.remove('bg-gradient-to-r', 'from-[#2d6a4f]', 'to-[#1b4332]', 'text-yellow-400');
         }
     </script>
 </body>
