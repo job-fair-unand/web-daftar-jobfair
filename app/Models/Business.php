@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Business extends Model
 {
     protected $fillable = [
+        'user_id',
         'name',
         'address',
         'phone',
@@ -14,6 +15,7 @@ class Business extends Model
         'logo',
         'type',
         'description',
+        'proposal',
     ];
 
     protected $casts = [
@@ -28,6 +30,23 @@ class Business extends Model
             return asset('storage/business/logos/' . $this->logo);
         }
         return asset('assets/icons/aceed.png');
+    }
+
+    // Accessor untuk mendapatkan URL proposal
+    public function getProposalUrlAttribute()
+    {
+        if ($this->proposal) {
+            return asset('storage/business/proposals/' . $this->proposal);
+        }
+        return null;
+    }
+
+    /**
+     * Relasi dengan User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     // Scope untuk filter berdasarkan tipe
