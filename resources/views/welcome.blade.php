@@ -29,7 +29,7 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-white to-green-50 pt-0 overflow-hidden">
+    <section id="home" class="relative bg-gradient-to-br from-white to-green-50 pt-0 overflow-hidden">
         <div class="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-yellow-50 to-transparent"></div>
         <div class="max-w-screen-xl px-4 py-4 mx-auto lg:py-8">
             <div class="grid lg:grid-cols-12 gap-8 items-center">
