@@ -1,44 +1,62 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GuestController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\SponsorController;
+use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ParticipantController;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [GuestController::class, 'index'])->name('home');
+Route::get('/perusahaan', [GuestController::class, 'showCompany'])->name('company');
+Route::get('/umkm-info', [GuestController::class, 'showUmkm'])->name('business');
+Route::get('/beasiswa', [GuestController::class, 'showScholarship'])->name('scholarship');
+Route::get('/tentang', [GuestController::class, 'showAbout'])->name('about');
+Route::get('/daftar-peserta', [GuestController::class, 'showRegistration'])->name('registration');
+Route::post('/daftar-peserta', [ParticipantController::class, 'store'])->name('participant.store');
+
+Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/perusahaan', [AdminController::class, 'showCompany'])->name('company');
+    Route::get('/umkm', [AdminController::class, 'showUmkm'])->name('umkm');
+    Route::get('/sponsor', [AdminController::class, 'showSponsor'])->name('sponsor');
+    Route::get('/beasiswa', [AdminController::class, 'showScholarship'])->name('scholarship');
 });
 
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->name('dashboard');
+Route::middleware(['auth', 'verified', 'role:company'])->prefix('perusahaan')->name('company.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('company.dashboard');
+    })->name('dashboard');
+    Route::get('/pembayaran', function () {
+        return view('company.detail-pembayaran');
+    })->name('pembayaran');
 
-Route::get('/company/dashboard', function () {
-    return view('company.dashboard');
-})->name('dashboard');
+    Route::post('/pilih-booth', [CompanyController::class, 'prosesPilihBooth'])->name('pilih-booth');
+});
 
-// Sponsor Routes
 Route::prefix('sponsor')->name('sponsor.')->group(function () {
     Route::get('/register', [SponsorController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [SponsorController::class, 'store'])->name('store');
-    Route::get('/', [SponsorController::class, 'index'])->name('index');
-    Route::get('/{sponsor}', [SponsorController::class, 'show'])->name('show');
-    Route::delete('/{sponsor}', [SponsorController::class, 'destroy'])->name('destroy');
-    Route::get('/api/packages', [SponsorController::class, 'getPackages'])->name('packages');
 });
 
-// UMKM Routes
+// Sponsor Routes
+Route::middleware(['auth', 'verified', 'role:sponsor'])->prefix('sponsor')->name('sponsor.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('sponsor.dashboard');
+    })->name('dashboard');
+});
+
 Route::prefix('umkm')->name('umkm.')->group(function () {
     Route::get('/register', [BusinessController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [BusinessController::class, 'store'])->name('store');
-    Route::get('/', [BusinessController::class, 'index'])->name('index');
-    Route::get('/{business}', [BusinessController::class, 'show'])->name('show');
-    Route::delete('/{business}', [BusinessController::class, 'destroy'])->name('destroy');
-    Route::get('/api/types', [BusinessController::class, 'getTypes'])->name('types');
 });
 
-Route::get('/company/pembayaran', function () {
-    return view('company.detail-pembayaran');
-})->name('company.pembayaran');
+// UMKM Routes
+Route::middleware(['auth', 'verified', 'role:umkm'])->prefix('umkm')->name('umkm.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('umkm.dashboard');
+    })->name('dashboard');
+});
 
 require __DIR__.'/auth.php';

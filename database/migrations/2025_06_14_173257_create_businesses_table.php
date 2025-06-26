@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('businesses', function (Blueprint $table) {
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->id();
             $table->string('name');
             $table->string('address')->nullable();
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('type')->nullable();
             $table->text('description')->nullable();
+            $table->string('proposal');
             $table->timestamps();
         });
     }

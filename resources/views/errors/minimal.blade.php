@@ -22,8 +22,8 @@
         }
         
         @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
+            0%, 100% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(234, 179, 8, 0.6); }
         }
         
         @keyframes fadeInUp {
@@ -50,7 +50,7 @@
         .animate-bounce-custom { animation: bounce 2s infinite; }
         
         .gradient-text {
-            background: linear-gradient(135deg, #dc2626, #f59e0b, #10b981);
+            background: linear-gradient(135deg, #eab308, #10b981, #dc2626);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -71,12 +71,44 @@
         .delay-300 { animation-delay: 0.3s; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-red-50 via-yellow-50 to-green-50 dark:from-gray-900 dark:via-red-900 dark:to-green-900 min-h-screen font-instrument-sans antialiased overflow-x-hidden">
+<body class="bg-gradient-to-br from-yellow-50 to-green-50 dark:from-gray-900 dark:via-green-900 dark:to-yellow-900 min-h-screen font-instrument-sans antialiased overflow-x-hidden">
     
+    <!-- Navigation Bar -->
+    <nav class="bg-gradient-to-r from-yellow-600 to-green-600 shadow-lg">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <img src="/assets/icons/aceed.png" alt="ACEED Logo" class="h-10 w-auto">
+                    <span class="text-2xl font-bold text-white font-space-grotesk">Job Fair Unand</span>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="{{ route('home') }}" class="text-white hover:text-yellow-200 transition-colors">Beranda</a>
+                    <a href="{{ route('company') }}" class="text-white hover:text-yellow-200 transition-colors">Perusahaan</a>
+                    <a href="{{ route('scholarship') }}" class="text-white hover:text-yellow-200 transition-colors">Beasiswa</a>
+                    <a href="{{ route('business') }}" class="text-white hover:text-yellow-200 transition-colors">Bisnis</a>
+                    <a href="{{ route('about') }}" class="text-white hover:text-yellow-200 transition-colors">Tentang Kami</a>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-white focus:outline-none" onclick="toggleMenu()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden bg-green-700">
+                <a href="#home" class="block px-4 py-2 text-white hover:bg-yellow-600">Home</a>
+                <a href="#events" class="block px-4 py-2 text-white hover:bg-yellow-600">Events</a>
+                <a href="#sponsors" class="block px-4 py-2 text-white hover:bg-yellow-600">Sponsors</a>
+                <a href="#follow-us" class="block px-4 py-2 text-white hover:bg-yellow-600">Follow Us</a>
+            </div>
+        </div>
+    </nav>
+
     <!-- Floating Background Elements -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-red-400 to-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float"></div>
-        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-green-400 to-red-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" style="animation-delay: -3s;"></div>
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-yellow-400 to-green-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-green-400 to-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" style="animation-delay: -3s;"></div>
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-yellow-400 to-green-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-float" style="animation-delay: -1.5s;"></div>
     </div>
 
@@ -87,7 +119,7 @@
             <div class="flex items-center justify-center space-x-4 mb-12 animate-fadeInUp opacity-0">
                 <div class="relative">
                     <img src="/assets/icons/aceed.png" alt="ACEED Logo" class="h-16 w-auto object-contain animate-pulse-custom">
-                    <div class="absolute inset-0 bg-red-500/20 rounded-full blur-md animate-glow"></div>
+                    <div class="absolute inset-0 bg-yellow-500/20 rounded-full blur-md animate-glow"></div>
                 </div>
                 <div class="text-4xl font-bold gradient-text tracking-tight font-space-grotesk">
                     Job Fair Unand
@@ -98,14 +130,13 @@
             <div class="animate-fadeInUp opacity-0 delay-100 mb-8">
                 <div class="flex justify-center mb-8">
                     <div class="relative">
-                        <!-- Error Icon based on code -->
                         <div class="w-32 h-32 glass-effect rounded-3xl flex items-center justify-center shadow-2xl animate-bounce-custom">
                             @if(isset($exception) && $exception->getStatusCode() == 404)
-                                <svg class="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-16 h-16 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                             @elseif(isset($exception) && $exception->getStatusCode() == 403)
-                                <svg class="w-16 h-16 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-16 h-16 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                                 </svg>
                             @elseif(isset($exception) && $exception->getStatusCode() == 500)
@@ -113,12 +144,12 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.232 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                                 </svg>
                             @else
-                                <svg class="w-16 h-16 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             @endif
                         </div>
-                        <div class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 rounded-3xl blur-2xl opacity-20 animate-glow"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-yellow-500 to-green-500 rounded-3xl blur-2xl opacity-20 animate-glow"></div>
                     </div>
                 </div>
                 
@@ -170,7 +201,7 @@
             <!-- Action Buttons -->
             <div class="animate-fadeInUp opacity-0 delay-300">
                 <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-16">
-                    <a href="{{ url('/') }}" class="group relative inline-flex justify-center px-8 py-4 bg-gradient-to-r from-red-600 to-yellow-600 text-white font-bold text-lg rounded-2xl hover:from-red-700 hover:to-yellow-700 focus:outline-none focus:ring-4 focus:ring-red-500/50 shadow-2xl transition-all duration-300 transform hover:scale-105">
+                    <a href="{{ url('/') }}" class="group relative inline-flex justify-center px-8 py-4 bg-gradient-to-r from-yellow-600 to-green-600 text-white font-bold text-lg rounded-2xl hover:from-yellow-700 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-yellow-500/50 shadow-2xl transition-all duration-300 transform hover:scale-105">
                         <span class="flex items-center space-x-2">
                             <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
@@ -179,7 +210,7 @@
                         </span>
                     </a>
                     
-                    <button onclick="history.back()" class="group relative inline-flex justify-center px-8 py-4 glass-effect text-gray-700 dark:text-gray-200 hover:text-red-600 dark:hover:text-red-400 rounded-2xl font-bold text-lg focus:outline-none focus:ring-4 focus:ring-red-500/50 shadow-xl transition-all duration-300 transform hover:scale-105">
+                    <button onclick="history.back()" class="group relative inline-flex justify-center px-8 py-4 glass-effect text-gray-700 dark:text-gray-200 hover:text-yellow-600 dark:hover:text-yellow-400 rounded-2xl font-bold text-lg focus:outline-none focus:ring-4 focus:ring-yellow-500/50 shadow-xl transition-all duration-300 transform hover:scale-105">
                         <span class="flex items-center space-x-2">
                             <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -195,14 +226,14 @@
                         Butuh bantuan? Hubungi tim support kami:
                     </p>
                     <div class="flex justify-center space-x-6 text-sm">
-                        <a href="mailto:jobfair@unand.ac.id" class="flex items-center space-x-1 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors duration-300">
+                        <a href="mailto:jobfair@unand.ac.id" class="flex items-center space-x-1 text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors duration-300">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
                                 <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
                             </svg>
                             <span>Email</span>
                         </a>
-                        <a href="tel:+6275123456" class="flex items-center space-x-1 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors duration-300">
+                        <a href="tel:+6275123456" class="flex items-center space-x-1 text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors duration-300">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
                             </svg>
@@ -214,16 +245,60 @@
         </div>
     </div>
 
-    {{-- <!-- Footer -->
-    <footer class="absolute bottom-0 w-full py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center text-gray-500 dark:text-gray-400 text-sm">
-                © 2025 Job Fair Universitas Andalas. All rights reserved.
+    <!-- Footer -->
+    <footer class="bg-gradient-to-br from-green-900 to-yellow-900 py-12">
+        <div class="max-w-screen-xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <img src="/assets/icons/aceed.png" alt="Universitas Andalas Logo" class="h-10 w-auto">
+                        <span class="text-2xl font-bold text-white font-space-grotesk">Job Fair Unand</span>
+                    </div>
+                    <p class="text-gray-300 text-base max-w-md">
+                        Job Fair Universitas Andalas 2025 menghubungkan talenta terbaik dengan peluang karier dari perusahaan terkemuka.
+                    </p>
+                </div>
+                <div>
+                    <h5 class="text-base font-semibold text-white mb-4">Navigasi</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-300 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#events" class="text-gray-300 hover:text-white transition-colors">Events</a></li>
+                        <li><a href="#sponsors" class="text-gray-300 hover:text-white transition-colors">Sponsors</a></li>
+                        <li><a href="#follow-us" class="text-gray-300 hover:text-white transition-colors">Follow Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-base font-semibold text-white mb-4">Kontak Kami</h5>
+                    <ul class="space-y-2 text-gray-300">
+                        <li class="flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                            </svg>
+                            <span>+62 751 123 456</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="currentColor">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                            </svg>
+                            <span>jobfair@unand.ac.id</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 pt-4 border-t border-gray-700 text-center">
+                <p class="text-sm text-gray-400">© 2025 Job Fair Universitas Andalas. All rights reserved.</p>
             </div>
         </div>
-    </footer> --}}
+    </footer>
 
     <script>
+        // Toggle mobile menu
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
         // Animate elements on load
         window.addEventListener('load', function() {
             const elements = document.querySelectorAll('.animate-fadeInUp');
@@ -232,22 +307,6 @@
                     el.style.opacity = '1';
                 }, index * 100);
             });
-        });
-        
-        // Add some interactive effects
-        document.addEventListener('mousemove', function(e) {
-            const cursor = document.querySelector('.cursor-effect');
-            if (!cursor) {
-                const newCursor = document.createElement('div');
-                newCursor.className = 'cursor-effect fixed w-4 h-4 bg-gradient-to-r from-red-400 to-yellow-400 rounded-full pointer-events-none mix-blend-multiply filter blur-sm opacity-30 transition-all duration-300 z-50';
-                document.body.appendChild(newCursor);
-            }
-            
-            const cursorEl = document.querySelector('.cursor-effect');
-            if (cursorEl) {
-                cursorEl.style.left = e.clientX - 8 + 'px';
-                cursorEl.style.top = e.clientY - 8 + 'px';
-            }
         });
     </script>
 </body>
