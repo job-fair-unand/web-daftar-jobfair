@@ -16,8 +16,7 @@ class Participant extends Model
         'institution_name',
         'purpose',
         'where_did_you_hear',
-        'interested_next_event',
-        'suggestion',
+        'wish_for_event',
     ];
 
     protected $casts = [

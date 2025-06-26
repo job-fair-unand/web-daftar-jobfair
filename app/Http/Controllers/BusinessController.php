@@ -38,7 +38,7 @@ class BusinessController extends Controller
                 'name' => 'required|string|max:255',
                 'address' => 'required|string|max:500',
                 'phone' => 'required|string|max:20',
-                'email' => 'required|email|max:255|unique:users,email|unique:businesses,email',
+                'email' => 'required|email|max:255|unique:users,email',
                 'password' => 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
                 'password_confirmation' => 'required|string|min:8',
                 'type' => 'required|string|in:kuliner,fashion,kerajinan,teknologi,pertanian,jasa,lainnya',
@@ -111,30 +111,22 @@ class BusinessController extends Controller
                     $validated['proposal'] = $proposalName;
                 }
 
-                if ($validated['password'] !== $validated['password_confirmation']) {
-                    return redirect()->back()
-                        ->withInput()
-                        ->withErrors(['password_confirmation' => 'Konfirmasi password tidak cocok']);
-                }
-
-                // 2. BUAT USER
+                // 2. BUAT USER dengan data lengkap
                 $user = User::create([
                     'name' => $validated['name'],
                     'email' => $validated['email'],
                     'password' => Hash::make($validated['password']),
                     'role' => 'umkm',
+                    'phone_number' => $validated['phone'], // Sesuai kolom di tabel users
+                    'address' => $validated['address'],      // Sesuai kolom di tabel users
                 ]);
 
-                // 3. BUAT BUSINESS DENGAN USER_ID
+                // 3. BUAT BUSINESS hanya dengan data yang ada di tabel businesses
                 $business = Business::create([
                     'user_id' => $user->id,
-                    'name' => $validated['name'],
-                    'address' => $validated['address'],
-                    'phone' => $validated['phone'],
-                    'email' => $validated['email'],
+                    'logo' => $validated['logo'] ?? null,
                     'type' => $validated['type'],
                     'description' => $validated['description'],
-                    'logo' => $validated['logo'] ?? null,
                     'proposal' => $validated['proposal'] ?? null,
                 ]);
 
@@ -159,7 +151,7 @@ class BusinessController extends Controller
                         'redirect' => route('verification.notice'),
                         'data' => [
                             'id' => $business->id,
-                            'name' => $business->name,
+                            'name' => $user->name, // Ambil dari user
                             'type' => $business->type
                         ]
                     ], 201);
@@ -240,9 +232,12 @@ class BusinessController extends Controller
         // Pencarian jika ada
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', "%{$request->search}%")
-                  ->orWhere('email', 'like', "%{$request->search}%")
-                  ->orWhere('type', 'like', "%{$request->search}%");
+                $q->where('type', 'like', "%{$request->search}%")
+                ->orWhere('description', 'like', "%{$request->search}%")
+                ->orWhereHas('user', function($userQuery) use ($request) {
+                    $userQuery->where('name', 'like', "%{$request->search}%")
+                            ->orWhere('email', 'like', "%{$request->search}%");
+                });
             });
         }
 

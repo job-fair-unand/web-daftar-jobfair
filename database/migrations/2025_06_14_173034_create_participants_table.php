@@ -22,8 +22,7 @@ return new class extends Migration
             $table->string('institution_name');
             $table->string('purpose'); 
             $table->string('where_did_you_hear');
-            $table->boolean('interested_next_event');
-            $table->string('suggestion');
+            $table->string('wish_for_event');
             $table->timestamps();
         });
     }

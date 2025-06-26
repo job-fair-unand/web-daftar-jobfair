@@ -8,10 +8,6 @@ class Sponsor extends Model
 {
     protected $fillable = [
         'user_id',
-        'name',
-        'address',
-        'phone',
-        'email',
         'logo',
         'sponsor_package',
         'mou',
