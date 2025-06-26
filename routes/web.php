@@ -6,6 +6,7 @@ use App\Http\Controllers\SponsorController;
 use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ParticipantController;
 
 Route::get('/', [GuestController::class, 'index'])->name('home');
 Route::get('/perusahaan', [GuestController::class, 'showCompany'])->name('company');
@@ -13,6 +14,7 @@ Route::get('/umkm-info', [GuestController::class, 'showUmkm'])->name('business')
 Route::get('/beasiswa', [GuestController::class, 'showScholarship'])->name('scholarship');
 Route::get('/tentang', [GuestController::class, 'showAbout'])->name('about');
 Route::get('/daftar-peserta', [GuestController::class, 'showRegistration'])->name('registration');
+Route::post('/daftar-peserta', [ParticipantController::class, 'store'])->name('participant.store');
 
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
