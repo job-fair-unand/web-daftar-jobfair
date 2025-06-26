@@ -218,7 +218,7 @@
     </section>
 
     <!-- FAQ Section -->
-    <section class="py-20 bg-gradient-to-br from-gray-50 to-yellow-50">
+    <section id="faq" class="py-20 bg-gradient-to-br from-gray-50 to-yellow-50">
         <div class="max-w-screen-xl mx-auto px-4">
             <div class="text-center max-w-3xl mx-auto mb-12">
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">Pertanyaan <span class="text-yellow-600">Umum</span></h2>
