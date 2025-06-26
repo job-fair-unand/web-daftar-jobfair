@@ -3,6 +3,13 @@
 @section('title', 'ACEED EXPO Universitas Andalas 2025')
 
 <style>
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+.animate-float {
+    animation: float infinite ease-in-out;
+}
 @keyframes sponsor-marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -48,6 +55,15 @@
                             <span class="font-semibold">karier impianmu</span>.
                         </p>
                     </div>
+                    
+                    <!-- CTA Button moved to hero section -->
+                    <div class="pt-4">
+                        <a href="{{ route('registration') }}" 
+                           class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-yellow-600 rounded-lg shadow-lg hover:bg-yellow-700 transition duration-200 transform hover:scale-105">
+                            Daftar Sekarang
+                        </a>
+                    </div>
+                    
                     <div class="grid grid-cols-3 gap-8 pt-6">
                         <div class="text-center">
                             <div class="text-3xl font-bold text-yellow-600 mb-2">9-11</div>
@@ -84,7 +100,7 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div class="text-center p-6 bg-white rounded-xl border border-gray-100 shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out" style="animation-delay: 0.1s;">
                     <svg class="w-10 h-10 mx-auto text-yellow-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 005.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
                     <div class="text-3xl font-bold text-yellow-600 mb-2">33.506</div>
                     <div class="text-sm text-gray-600">Jumlah Mahasiswa</div>
@@ -267,23 +283,57 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-20 bg-gradient-to-r from-yellow-600 to-yellow-700">
-        <div class="max-w-screen-xl mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
-                Siap Memulai Karir Impianmu?
-            </h2>
-            <p class="text-xl text-yellow-100 mb-8 max-w-2xl mx-auto">
-                Jangan lewatkan kesempatan emas ini! Bergabunglah dengan ribuan peserta lainnya di ACEED EXPO 2025.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ route('registration') }}" 
-                   class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-yellow-600 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition duration-200">
-                    Daftar Sekarang
-                </a>
+    <section class="py-24 bg-gradient-to-br from-yellow-600 via-green-600 to-yellow-500 relative overflow-hidden">
+        <!-- Background decorations -->
+        <div class="absolute inset-0 bg-gradient-to-r from-yellow-600/30 to-green-600/30"></div>
+        <div class="absolute top-0 left-0 w-80 h-80 bg-white/10 rounded-full blur-3xl -translate-x-40 -translate-y-40 opacity-70"></div>
+        <div class="absolute bottom-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl translate-x-40 translate-y-40 opacity-70"></div>
+        
+        <!-- Floating particles -->
+        <div class="absolute top-16 left-16 w-3 h-3 bg-yellow-200/50 rounded-full animate-float" style="animation-duration: 6s;"></div>
+        <div class="absolute top-24 right-24 w-4 h-4 bg-green-200/40 rounded-full animate-float" style="animation-duration: 8s; animation-delay: 1s;"></div>
+        <div class="absolute bottom-16 left-32 w-2 h-2 bg-yellow-300/30 rounded-full animate-float" style="animation-duration: 7s; animation-delay: 2s;"></div>
+        <div class="absolute bottom-24 right-16 w-3 h-3 bg-green-300/40 rounded-full animate-float" style="animation-duration: 9s; animation-delay: 3s;"></div>
+        
+        <!-- Main content -->
+        <div class="max-w-screen-xl mx-auto px-4 text-center relative z-10">
+            <div class="max-w-4xl mx-auto">
+                <!-- Icon/Badge -->
+                <div class="inline-flex items-center justify-center w-14 h-14 bg-white/10 backdrop-blur-md rounded-full mb-8 border border-white/20 shadow-lg">
+                    <svg class="w-7 h-7 text-yellow-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
+                
+                <!-- Main heading -->
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-6 leading-tight tracking-tight">
+                    Bergabunglah dengan
+                    <span class="relative inline-block">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-100 via-white to-yellow-200 transition-all duration-500 ease-in-out hover:bg-gradient-to-r hover:from-yellow-200 hover:via-white hover:to-yellow-100">
+                            Komunitas Profesional
+                        </span>
+                        <div class="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-yellow-200/60 to-transparent rounded-full"></div>
+                    </span>
+                </h2>
+                
+                <!-- Description -->
+                <div class="backdrop-blur-md bg-white/5 rounded-2xl p-8 mb-8 border border-white/10 shadow-xl">
+                    <p class="text-lg md:text-xl text-white/90 leading-relaxed max-w-3xl mx-auto font-sans">
+                        Ratusan alumni telah memulai karir cemerlang mereka melalui ACEED EXPO. 
+                        <span class="font-medium text-yellow-100">Jadilah bagian dari kesuksesan ini!</span>
+                    </p>
+                </div>
             </div>
         </div>
+        
+        <!-- Bottom wave decoration -->
+        <div class="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="relative block w-full h-16">
+                <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="fill-gray-50"></path>
+            </svg>
+        </div>
     </section>
+    
     <script>
         // FAQ Toggle Functionality
         document.querySelectorAll('.faq-toggle').forEach(button => {

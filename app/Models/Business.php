@@ -8,10 +8,6 @@ class Business extends Model
 {
     protected $fillable = [
         'user_id',
-        'name',
-        'address',
-        'phone',
-        'email',
         'logo',
         'type',
         'description',

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Verifikasi email Anda untuk Job Fair Universitas Andalas 2025.">
-    <link rel="icon" href="/assets/icons/aceed.png">
+    <link rel="icon" href="{{ asset('assets/icons/aceed.png') }}">
     <title>Verifikasi Email - Job Fair Universitas Andalas 2025</title>
 
     <!-- Fonts -->
@@ -92,7 +92,7 @@
                 <!-- Main Message -->
                 <div class="mb-8">
                     <h2 class="text-2xl font-semibold text-gray-900 mb-4">
-                        Cek Email Anda! 📧
+                        Cek Email Anda!
                     </h2>
                     <p class="text-gray-600 leading-relaxed text-base">
                         Terima kasih telah mendaftar! Sebelum memulai, silakan verifikasi alamat email Anda dengan mengklik tautan yang baru saja kami kirimkan.
@@ -119,7 +119,7 @@
                 <!-- Instructions -->
                 <div class="mb-10">
                     <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
-                        <h3 class="text-base font-semibold text-gray-800 mb-4">📝 Langkah Selanjutnya:</h3>
+                        <h3 class="text-base font-semibold text-gray-800 mb-4">Langkah Selanjutnya:</h3>
                         <ol class="text-sm text-gray-600 space-y-3 text-left">
                             <li class="flex items-start space-x-3">
                                 <span class="flex-shrink-0 w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-bold">1</span>
@@ -183,7 +183,7 @@
                                 <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                 </svg>
-                                <span class="text-base font-semibold text-green-800">Email Berhasil Dikirim! ✅</span>
+                                <span class="text-base font-semibold text-green-800">Email Berhasil Dikirim!</span>
                             </div>
                             <p class="text-sm text-green-700">
                                 Tautan verifikasi baru telah dikirim ke alamat email Anda. Silakan cek email (termasuk folder spam).
@@ -224,32 +224,11 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Additional Info -->
-            <div class="mt-10 text-center">
-                <div class="glass-effect rounded-xl p-5">
-                    <div class="flex items-center justify-center space-x-3 text-base text-gray-600 mb-2">
-                        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                        </svg>
-                        <span class="font-semibold">Keamanan Terjamin</span>
-                    </div>
-                    <p class="text-sm text-gray-500">
-                        Verifikasi email membantu melindungi akun dan data pribadi Anda
-                    </p>
-                </div>
-            </div>
         </div>
     </div>
 
     <!-- Alpine.js Data -->
     <script>
-        function verifyEmailForm() {
-            return {
-                // Add any interactive functionality here if needed
-            }
-        }
-
         // Auto-hide success message after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
             const successMessage = document.querySelector('.bg-green-50');

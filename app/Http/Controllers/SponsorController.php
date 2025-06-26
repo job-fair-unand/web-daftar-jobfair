@@ -1,6 +1,4 @@
 <?php
-// filepath: app/Http/Controllers/SponsorController.php
-
 namespace App\Http\Controllers;
 
 use App\Models\Sponsor;
@@ -38,8 +36,8 @@ class SponsorController extends Controller
                 'name' => 'required|string|max:255',
                 'address' => 'required|string|max:500',
                 'phone' => 'required|string|max:20',
-                'email' => 'required|email|max:255|unique:users,email|unique:sponsors,email',
-                'password' => 'required|string|min:8|confirmed',
+                'email' => 'required|email|max:255|unique:users,email',
+                'password' => 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
                 'password_confirmation' => 'required|string|min:8',
                 'sponsor_package' => 'required|string|in:platinum,gold,silver,bronze',
                 'wish_for_event' => 'required|string|max:1000',
@@ -56,11 +54,12 @@ class SponsorController extends Controller
                 'email.email' => 'Format email tidak valid',
                 'email.unique' => 'Email sudah terdaftar',
                 'email.max' => 'Email maksimal 255 karakter',
-                'password.required' => 'Kata sandi wajib diisi',
-                'password.min' => 'Kata sandi minimal 8 karakter',
-                'password.confirmed' => 'Kata sandi tidak cocok',
-                'password_confirmation.required' => 'Konfirmasi kata sandi wajib diisi',
-                'password_confirmation.min' => 'Konfirmasi kata sandi minimal 8 karakter',
+                'password.required' => 'Password wajib diisi',
+                'password.min' => 'Password minimal 8 karakter',
+                'password.confirmed' => 'Konfirmasi password tidak cocok',
+                'password.regex' => 'Password harus mengandung huruf besar, kecil, dan angka',
+                'password_confirmation.required' => 'Konfirmasi password wajib diisi',
+                'password_confirmation.min' => 'Konfirmasi password minimal 8 karakter',
                 'sponsor_package.required' => 'Paket sponsorship wajib dipilih',
                 'sponsor_package.in' => 'Paket sponsorship tidak valid',
                 'wish_for_event.required' => 'Harapan untuk acara wajib diisi',
@@ -110,31 +109,23 @@ class SponsorController extends Controller
                     $validated['mou'] = $mouName;
                 }
 
-                if ($validated['password'] !== $validated['password_confirmation']) {
-                    return redirect()->back()
-                        ->withInput()
-                        ->withErrors(['password_confirmation' => 'Konfirmasi password tidak cocok']);
-                }
-
-                // 2. BUAT USER
+                // 2. BUAT USER dengan data lengkap
                 $user = User::create([
                     'name' => $validated['name'],
                     'email' => $validated['email'],
                     'password' => Hash::make($validated['password']),
                     'role' => 'sponsor',
+                    'phone_number' => $validated['phone'], // Sesuai kolom di tabel users
+                    'address' => $validated['address'],      // Sesuai kolom di tabel users
                 ]);
 
-                // 3. BUAT SPONSOR DENGAN USER_ID
+                // 3. BUAT SPONSOR hanya dengan data yang ada di tabel sponsors
                 $sponsor = Sponsor::create([
                     'user_id' => $user->id,
-                    'name' => $validated['name'],
-                    'address' => $validated['address'],
-                    'phone' => $validated['phone'],
-                    'email' => $validated['email'],
-                    'sponsor_package' => $validated['sponsor_package'],
-                    'wish_for_event' => $validated['wish_for_event'],
                     'logo' => $validated['logo'] ?? null,
+                    'sponsor_package' => $validated['sponsor_package'],
                     'mou' => $validated['mou'] ?? null,
+                    'wish_for_event' => $validated['wish_for_event'],
                 ]);
 
                 // Commit transaction
@@ -143,7 +134,7 @@ class SponsorController extends Controller
                 // Login user
                 Auth::login($user);
 
-                // Kirim email verifikasi langsung (tanpa delay untuk testing)
+                // Kirim email verifikasi
                 try {
                     $user->sendEmailVerificationNotification();
                 } catch (\Exception $e) {
@@ -158,7 +149,7 @@ class SponsorController extends Controller
                         'redirect' => route('verification.notice'),
                         'data' => [
                             'id' => $sponsor->id,
-                            'name' => $sponsor->name,
+                            'name' => $user->name, // Ambil dari user
                             'sponsor_package' => $sponsor->sponsor_package
                         ]
                     ], 201);
@@ -229,7 +220,7 @@ class SponsorController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Sponsor::with('user');
+        $query = Sponsor::with('user'); // Load relasi user
 
         // Filter berdasarkan paket sponsor jika ada
         if ($request->filled('package')) {
@@ -239,9 +230,12 @@ class SponsorController extends Controller
         // Pencarian jika ada
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', "%{$request->search}%")
-                  ->orWhere('email', 'like', "%{$request->search}%")
-                  ->orWhere('sponsor_package', 'like', "%{$request->search}%");
+                $q->where('sponsor_package', 'like', "%{$request->search}%")
+                  ->orWhere('wish_for_event', 'like', "%{$request->search}%")
+                  ->orWhereHas('user', function($userQuery) use ($request) {
+                      $userQuery->where('name', 'like', "%{$request->search}%")
+                               ->orWhere('email', 'like', "%{$request->search}%");
+                  });
             });
         }
 

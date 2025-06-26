@@ -40,6 +40,11 @@ Route::prefix('sponsor')->name('sponsor.')->group(function () {
     Route::post('/register', [SponsorController::class, 'store'])->name('store');
 });
 
+Route::prefix('perusahaan')->name('company.')->group(function () {
+    Route::get('/register', [CompanyController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [CompanyController::class, 'store'])->name('store');
+});
+
 // Sponsor Routes
 Route::middleware(['auth', 'verified', 'role:sponsor'])->prefix('sponsor')->name('sponsor.')->group(function () {
     Route::get('/dashboard', function () {
