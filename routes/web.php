@@ -19,9 +19,16 @@ Route::post('/daftar-peserta', [ParticipantController::class, 'store'])->name('p
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::get('/perusahaan', [AdminController::class, 'showCompany'])->name('company');
+    Route::get('/company/{company}/detail', [AdminController::class, 'getCompanyDetail'])->name('company.detail');
+    Route::delete('/perusahaan/{company}', [AdminController::class, 'deleteCompany'])->name('company.delete');
     Route::get('/umkm', [AdminController::class, 'showUmkm'])->name('umkm');
     Route::get('/sponsor', [AdminController::class, 'showSponsor'])->name('sponsor');
     Route::get('/beasiswa', [AdminController::class, 'showScholarship'])->name('scholarship');
+    
+    Route::get('/peserta', [AdminController::class, 'showParticipant'])->name('participant');
+    Route::get('/peserta/{participant}/detail', [AdminController::class, 'getParticipantDetail'])->name('participant.detail');
+    Route::post('/peserta', [AdminController::class, 'storeParticipant'])->name('participant.store');
+    Route::delete('/peserta/{participant}', [AdminController::class, 'deleteParticipant'])->name('participant.delete');
 });
 
 Route::middleware(['auth', 'verified', 'role:company'])->prefix('perusahaan')->name('company.')->group(function () {
