@@ -245,25 +245,6 @@
                 </a>
             </div>
 
-            <!-- Info Cards -->
-            <div class="info-cards">
-                <div class="info-card">
-                    <div class="icon">📅</div>
-                    <div class="title">9-11</div>
-                    <div class="subtitle">September 2025</div>
-                </div>
-                <div class="info-card">
-                    <div class="icon">🏢</div>
-                    <div class="title">50+</div>
-                    <div class="subtitle">Perusahaan</div>
-                </div>
-                <div class="info-card">
-                    <div class="icon">💼</div>
-                    <div class="title">1000+</div>
-                    <div class="subtitle">Lowongan Kerja</div>
-                </div>
-            </div>
-
             <div class="message">
                 <strong>🔒 Keamanan:</strong> Link verifikasi ini akan kadaluarsa dalam <strong>60 menit</strong> untuk menjaga keamanan akun Anda.<br>
                 <strong>❓ Tidak mendaftar?</strong> Jika Anda tidak mendaftar akun di platform kami, silakan abaikan email ini.
@@ -272,20 +253,6 @@
 
         <!-- Footer -->
         <div class="footer">
-            <div class="footer-links">
-                <a href="{{ route('home') }}">Beranda</a>
-                <a href="{{ route('company') }}">Perusahaan</a>
-                <a href="{{ route('scholarship') }}">Beasiswa</a>
-                <a href="{{ route('business') }}">UMKM</a>
-            </div>
-
-            <div class="social-links">
-                <a href="#" title="Instagram">📷</a>
-                <a href="#" title="Facebook">📘</a>
-                <a href="#" title="LinkedIn">💼</a>
-                <a href="#" title="Twitter">🐦</a>
-            </div>
-
             <div class="footer-text">
                 <strong>Job Fair Universitas Andalas 2025</strong><br>
                 Limau Manis, Pauh, Kota Padang, Sumatera Barat 25163<br>
