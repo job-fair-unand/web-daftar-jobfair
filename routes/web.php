@@ -7,6 +7,7 @@ use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\ScholarshipController;
 
 Route::get('/', [GuestController::class, 'index'])->name('home');
 Route::get('/perusahaan', [GuestController::class, 'showCompany'])->name('company');
@@ -19,11 +20,17 @@ Route::post('/daftar-peserta', [ParticipantController::class, 'store'])->name('p
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::get('/perusahaan', [AdminController::class, 'showCompany'])->name('company');
-    Route::get('/company/{company}/detail', [AdminController::class, 'getCompanyDetail'])->name('company.detail');
+    Route::get('/perusahaan/{company}/detail', [AdminController::class, 'getCompanyDetail'])->name('company.detail');
     Route::delete('/perusahaan/{company}', [AdminController::class, 'deleteCompany'])->name('company.delete');
+    
     Route::get('/umkm', [AdminController::class, 'showUmkm'])->name('umkm');
+    Route::get('/umkm/{business}/detail', [AdminController::class, 'getBusinessDetail'])->name('umkm.detail');
+
     Route::get('/sponsor', [AdminController::class, 'showSponsor'])->name('sponsor');
+    Route::get('/sponsor/{sponsor}/detail', [AdminController::class, 'getSponsorDetail'])->name('sponsor.detail');
+
     Route::get('/beasiswa', [AdminController::class, 'showScholarship'])->name('scholarship');
+    Route::get('/beasiswa/{scholarship}/detail', [AdminController::class, 'getScholarshipDetail'])->name('scholarship.detail');
     
     Route::get('/peserta', [AdminController::class, 'showParticipant'])->name('participant');
     Route::get('/peserta/{participant}/detail', [AdminController::class, 'getParticipantDetail'])->name('participant.detail');
@@ -45,6 +52,11 @@ Route::middleware(['auth', 'verified', 'role:company'])->prefix('perusahaan')->n
 Route::prefix('sponsor')->name('sponsor.')->group(function () {
     Route::get('/register', [SponsorController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [SponsorController::class, 'store'])->name('store');
+});
+
+Route::prefix('beasiswa')->name('scholarship.')->group(function () {
+    Route::get('/register', [ScholarshipController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [ScholarshipController::class, 'store'])->name('store');
 });
 
 Route::prefix('perusahaan')->name('company.')->group(function () {

@@ -143,10 +143,6 @@
                                     </h5>
                                     <div class="space-y-3">
                                         <div>
-                                            <p class="text-sm text-gray-500">ID Perusahaan</p>
-                                            <p id="companyId" class="font-medium">#000</p>
-                                        </div>
-                                        <div>
                                             <p class="text-sm text-gray-500">Email Terverifikasi</p>
                                             <p id="emailVerified" class="font-medium">-</p>
                                         </div>

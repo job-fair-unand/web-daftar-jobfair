@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Scholarship;
 use App\Models\Business;
 use App\Models\Sponsor;
 use App\Models\Participant;
@@ -12,14 +13,121 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
-    /**
-     * Show the admin dashboard.
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
-        return view('admin.dashboard');
+        // Get real statistics
+        $totalCompanies = Company::count();
+        $totalSponsors = Sponsor::count();
+        $totalBusinesses = Business::count();
+        $totalParticipants = Participant::count();
+        $totalScholarships = Scholarship::count();
+
+        // Verified vs Unverified
+        $verifiedCompanies = Company::whereHas('user', function($q) {
+            $q->whereNotNull('email_verified_at');
+        })->count();
+
+        $verifiedSponsors = Sponsor::whereHas('user', function($q) {
+            $q->whereNotNull('email_verified_at');
+        })->count();
+
+        $verifiedBusinesses = Business::whereHas('user', function($q) {
+            $q->whereNotNull('email_verified_at');
+        })->count();
+
+        $verifiedScholarships = Scholarship::whereHas('user', function($q) {
+            $q->whereNotNull('email_verified_at');
+        })->count();
+
+        // Monthly registration data (last 6 months)
+        $monthlyData = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $monthName = $date->format('M Y');
+            
+            $monthlyData['labels'][] = $monthName;
+            $monthlyData['companies'][] = Company::whereYear('created_at', $date->year)
+                                                ->whereMonth('created_at', $date->month)
+                                                ->count();
+            $monthlyData['sponsors'][] = Sponsor::whereYear('created_at', $date->year)
+                                            ->whereMonth('created_at', $date->month)
+                                            ->count();
+            $monthlyData['businesses'][] = Business::whereYear('created_at', $date->year)
+                                                ->whereMonth('created_at', $date->month)
+                                                ->count();
+            $monthlyData['participants'][] = Participant::whereYear('created_at', $date->year)
+                                                    ->whereMonth('created_at', $date->month)
+                                                    ->count();
+        }
+
+        // Sponsor package distribution
+        $sponsorPackages = Sponsor::selectRaw('sponsor_package, COUNT(*) as count')
+                                ->groupBy('sponsor_package')
+                                ->pluck('count', 'sponsor_package')
+                                ->toArray();
+
+        // Business type distribution
+        $businessTypes = Business::selectRaw('type, COUNT(*) as count')
+                                ->whereNotNull('type')
+                                ->groupBy('type')
+                                ->pluck('count', 'type')
+                                ->take(5)
+                                ->toArray();
+
+        // Recent activities (last 10 registrations)
+        $recentActivities = collect();
+        
+        // Get recent companies
+        Company::with('user')->latest()->take(3)->get()->each(function($company) use ($recentActivities) {
+            $recentActivities->push([
+                'type' => 'company',
+                'name' => $company->user?->name ?? 'Company',
+                'created_at' => $company->created_at,
+                'icon' => 'building-office',
+                'color' => 'blue'
+            ]);
+        });
+
+        // Get recent sponsors
+        Sponsor::with('user')->latest()->take(3)->get()->each(function($sponsor) use ($recentActivities) {
+            $recentActivities->push([
+                'type' => 'sponsor',
+                'name' => $sponsor->user?->name ?? 'Sponsor',
+                'created_at' => $sponsor->created_at,
+                'icon' => 'currency-dollar',
+                'color' => 'purple'
+            ]);
+        });
+
+        // Get recent businesses
+        Business::with('user')->latest()->take(2)->get()->each(function($business) use ($recentActivities) {
+            $recentActivities->push([
+                'type' => 'business',
+                'name' => $business->user?->name ?? 'UMKM',
+                'created_at' => $business->created_at,
+                'icon' => 'shopping-bag',
+                'color' => 'green'
+            ]);
+        });
+
+        // Get recent participants
+        Participant::latest()->take(2)->get()->each(function($participant) use ($recentActivities) {
+            $recentActivities->push([
+                'type' => 'participant',
+                'name' => $participant->name,
+                'created_at' => $participant->created_at,
+                'icon' => 'user',
+                'color' => 'yellow'
+            ]);
+        });
+
+        $recentActivities = $recentActivities->sortByDesc('created_at')->take(8);
+
+        return view('admin.dashboard', compact(
+            'totalCompanies', 'totalSponsors', 'totalBusinesses', 'totalParticipants', 'totalScholarships',
+            'verifiedCompanies', 'verifiedSponsors', 'verifiedBusinesses', 'verifiedScholarships',
+            'monthlyData', 'sponsorPackages', 'businessTypes', 'recentActivities'
+        ));
     }
 
     /**
@@ -140,11 +248,6 @@ class AdminController extends Controller
         }
     }
 
-    /**
-     * Show the sponsor management page.
-     *
-     * @return \Illuminate\View\View
-     */
     public function showSponsor(Request $request)
     {
         $query = Sponsor::with('user');
@@ -154,23 +257,66 @@ class AdminController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('sponsor_package', 'like', "%{$search}%")
-                  ->orWhere('wish_for_event', 'like', "%{$search}%")
                   ->orWhereHas('user', function($userQuery) use ($search) {
                       $userQuery->where('name', 'like', "%{$search}%")
-                               ->orWhere('email', 'like', "%{$search}%");
+                               ->orWhere('email', 'like', "%{$search}%")
+                               ->orWhere('phone_number', 'like', "%{$search}%");
                   });
             });
         }
 
+        // Filter by sponsor package
+        if ($request->filled('package')) {
+            $query->where('sponsor_package', $request->package);
+        }
+
+        // Get unique packages for filter dropdown
+        $packages = Sponsor::distinct()->pluck('sponsor_package')->filter();
+
         $sponsors = $query->latest()->paginate(10);
 
-        return view('admin.sponsor.index', compact('sponsors'));
+        return view('admin.sponsor.index', compact('sponsors', 'packages'));
+    }
+
+    /**
+     * Get sponsor detail for modal
+     */
+    public function getSponsorDetail(Sponsor $sponsor)
+    {
+        try {
+            $sponsor->load('user');
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $sponsor->id,
+                    'logo' => $sponsor->logo,
+                    'sponsor_package' => $sponsor->sponsor_package,
+                    'mou' => $sponsor->mou,
+                    'wish_for_event' => $sponsor->wish_for_event,
+                    'user' => [
+                        'name' => $sponsor->user?->name,
+                        'email' => $sponsor->user?->email,
+                        'phone_number' => $sponsor->user?->phone_number,
+                        'address' => $sponsor->user?->address,
+                        'email_verified_at' => $sponsor->user?->email_verified_at,
+                        'created_at' => $sponsor->user?->created_at,
+                    ],
+                    'registered_at' => $sponsor->created_at,
+                    'last_activity' => $sponsor->updated_at,
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil detail sponsor: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Show the UMKM management page.
-     *
-     * @return \Illuminate\View\View
      */
     public function showUmkm(Request $request)
     {
@@ -181,12 +327,26 @@ class AdminController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('type', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhereHas('user', function($userQuery) use ($search) {
-                      $userQuery->where('name', 'like', "%{$search}%")
-                               ->orWhere('email', 'like', "%{$search}%");
-                  });
+                ->orWhere('description', 'like', "%{$search}%")
+                ->orWhereHas('user', function($userQuery) use ($search) {
+                    $userQuery->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->orWhere('phone_number', 'like', "%{$search}%");
+                });
             });
+        }
+
+        // Status filter (based on email verification)
+        if ($request->filled('status')) {
+            if ($request->status === 'verified') {
+                $query->whereHas('user', function($q) {
+                    $q->whereNotNull('email_verified_at');
+                });
+            } elseif ($request->status === 'unverified') {
+                $query->whereHas('user', function($q) {
+                    $q->whereNull('email_verified_at');
+                });
+            }
         }
 
         $businesses = $query->latest()->paginate(10);
@@ -195,13 +355,113 @@ class AdminController extends Controller
     }
 
     /**
-     * Show the scholarship management page.
-     *
-     * @return \Illuminate\View\View
+     * Get business detail for modal
      */
-    public function showScholarship()
+    public function getBusinessDetail(Business $business)
     {
-        return view('admin.scholarship.index');
+        try {
+            $business->load('user');
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $business->id,
+                    'logo' => $business->logo,
+                    'type' => $business->type,
+                    'description' => $business->description,
+                    'proposal' => $business->proposal,
+                    'user' => [
+                        'name' => $business->user?->name,
+                        'email' => $business->user?->email,
+                        'phone_number' => $business->user?->phone_number,
+                        'address' => $business->user?->address,
+                        'email_verified_at' => $business->user?->email_verified_at,
+                        'created_at' => $business->user?->created_at,
+                    ],
+                    'registered_at' => $business->created_at,
+                    'last_activity' => $business->updated_at,
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil detail UMKM: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Show the scholarship management page.
+     */
+    public function showScholarship(Request $request)
+    {
+        $query = Scholarship::with('user');
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('description', 'like', "%{$search}%")
+                ->orWhereHas('user', function($userQuery) use ($search) {
+                    $userQuery->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->orWhere('phone_number', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        // Status filter (based on email verification)
+        if ($request->filled('status')) {
+            if ($request->status === 'verified') {
+                $query->whereHas('user', function($q) {
+                    $q->whereNotNull('email_verified_at');
+                });
+            } elseif ($request->status === 'unverified') {
+                $query->whereHas('user', function($q) {
+                    $q->whereNull('email_verified_at');
+                });
+            }
+        }
+
+        $scholarships = $query->latest()->paginate(10);
+
+        return view('admin.scholarship.index', compact('scholarships'));
+    }
+
+    /**
+     * Get scholarship detail for modal
+     */
+    public function getScholarshipDetail(Scholarship $scholarship)
+    {
+        try {
+            $scholarship->load('user');
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'logo' => $scholarship->logo,
+                    'description' => $scholarship->description,
+                    'file' => $scholarship->file,
+                    'user' => [
+                        'name' => $scholarship->user?->name,
+                        'email' => $scholarship->user?->email,
+                        'phone_number' => $scholarship->user?->phone_number,
+                        'address' => $scholarship->user?->address,
+                        'email_verified_at' => $scholarship->user?->email_verified_at,
+                        'created_at' => $scholarship->user?->created_at,
+                    ],
+                    'registered_at' => $scholarship->created_at,
+                    'last_activity' => $scholarship->updated_at,
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil detail beasiswa: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
