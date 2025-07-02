@@ -14,10 +14,10 @@
             <div>
                 <h3 class="text-base font-semibold text-white mb-3">Menu</h3>
                 <ul class="space-y-2">
-                    <li><a href="#home" class="text-gray-300 hover:text-yellow-300 transition text-xs">Beranda</a></li>
-                    <li><a href="#events" class="text-gray-300 hover:text-yellow-300 transition text-xs">Acara</a></li>
-                    <li><a href="#sponsors" class="text-gray-300 hover:text-yellow-300 transition text-xs">Sponsor</a></li>
-                    <li><a href="#faq" class="text-gray-300 hover:text-yellow-300 transition text-xs">FAQ</a></li>
+                    <li><a href="{{ route('home') }}#home" class="text-gray-300 hover:text-yellow-300 transition text-xs">Beranda</a></li>
+                    <li><a href="{{ route('home') }}#events" class="text-gray-300 hover:text-yellow-300 transition text-xs">Acara</a></li>
+                    <li><a href="{{ route('home') }}#sponsors" class="text-gray-300 hover:text-yellow-300 transition text-xs">Sponsor</a></li>
+                    <li><a href="{{ route('home') }}#faq" class="text-gray-300 hover:text-yellow-300 transition text-xs">FAQ</a></li>
                 </ul>
             </div>
 

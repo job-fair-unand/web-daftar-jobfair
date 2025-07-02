@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\SponsorController;
@@ -10,13 +9,33 @@ use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\ScholarshipController;
 
 Route::get('/', [GuestController::class, 'index'])->name('home');
+
+// Guest Routes (Public)
 Route::get('/perusahaan', [GuestController::class, 'showCompany'])->name('company');
+Route::get('/perusahaan/{company}', [GuestController::class, 'showCompanyDetail'])->name('company.show');
+
 Route::get('/umkm-info', [GuestController::class, 'showUmkm'])->name('business');
 Route::get('/beasiswa', [GuestController::class, 'showScholarship'])->name('scholarship');
 Route::get('/tentang', [GuestController::class, 'showAbout'])->name('about');
 Route::get('/daftar-peserta', [GuestController::class, 'showRegistration'])->name('registration');
 Route::post('/daftar-peserta', [ParticipantController::class, 'store'])->name('participant.store');
 
+// Registration Routes (Public)
+Route::prefix('register')->name('register.')->group(function () {
+    Route::get('/sponsor', [SponsorController::class, 'showRegistrationForm'])->name('sponsor');
+    Route::post('/sponsor', [SponsorController::class, 'store'])->name('sponsor.store');
+
+    Route::get('/beasiswa', [ScholarshipController::class, 'showRegistrationForm'])->name('scholarship');
+    Route::post('/beasiswa', [ScholarshipController::class, 'store'])->name('scholarship.store');
+
+    Route::get('/perusahaan', [CompanyController::class, 'showRegistrationForm'])->name('company');
+    Route::post('/perusahaan', [CompanyController::class, 'store'])->name('company.store');
+
+    Route::get('/umkm', [BusinessController::class, 'showRegistrationForm'])->name('umkm');
+    Route::post('/umkm', [BusinessController::class, 'store'])->name('umkm.store');
+});
+
+// Admin Routes
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::get('/perusahaan', [AdminController::class, 'showCompany'])->name('company');
@@ -38,49 +57,32 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::delete('/peserta/{participant}', [AdminController::class, 'deleteParticipant'])->name('participant.delete');
 });
 
-Route::middleware(['auth', 'verified', 'role:company'])->prefix('perusahaan')->name('company.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('company.dashboard');
-    })->name('dashboard');
-    Route::get('/pembayaran', function () {
-        return view('company.detail-pembayaran');
-    })->name('pembayaran');
-
+// Company Dashboard Routes (Protected)
+Route::middleware(['auth', 'verified', 'role:company'])->prefix('dashboard/company')->name('company.')->group(function () {
+    Route::get('/', [CompanyController::class, 'index'])->name('dashboard');
+    Route::get('/pembayaran', [CompanyController::class, 'prosesPilihBooth'])->name('pembayaran');
     Route::post('/pilih-booth', [CompanyController::class, 'prosesPilihBooth'])->name('pilih-booth');
 });
 
-Route::prefix('sponsor')->name('sponsor.')->group(function () {
-    Route::get('/register', [SponsorController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [SponsorController::class, 'store'])->name('store');
-});
-
-Route::prefix('beasiswa')->name('scholarship.')->group(function () {
-    Route::get('/register', [ScholarshipController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [ScholarshipController::class, 'store'])->name('store');
-});
-
-Route::prefix('perusahaan')->name('company.')->group(function () {
-    Route::get('/register', [CompanyController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [CompanyController::class, 'store'])->name('store');
-});
-
-// Sponsor Routes
-Route::middleware(['auth', 'verified', 'role:sponsor'])->prefix('sponsor')->name('sponsor.')->group(function () {
-    Route::get('/dashboard', function () {
+// Sponsor Dashboard Routes (Protected)
+Route::middleware(['auth', 'verified', 'role:sponsor'])->prefix('dashboard/sponsor')->name('sponsor.')->group(function () {
+    Route::get('/', function () {
         return view('sponsor.dashboard');
     })->name('dashboard');
 });
 
-Route::prefix('umkm')->name('umkm.')->group(function () {
-    Route::get('/register', [BusinessController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [BusinessController::class, 'store'])->name('store');
-});
-
-// UMKM Routes
-Route::middleware(['auth', 'verified', 'role:umkm'])->prefix('umkm')->name('umkm.')->group(function () {
-    Route::get('/dashboard', function () {
+// UMKM Dashboard Routes (Protected)
+Route::middleware(['auth', 'verified', 'role:umkm'])->prefix('dashboard/umkm')->name('umkm.')->group(function () {
+    Route::get('/', function () {
         return view('umkm.dashboard');
     })->name('dashboard');
 });
+
+// Scholarship Dashboard Routes (Protected)
+// Route::middleware(['auth', 'verified', 'role:scholarship'])->prefix('dashboard/scholarship')->name('scholarship.')->group(function () {
+//     Route::get('/', function () {
+//         return view('scholarship.dashboard');
+//     })->name('dashboard');
+// });
 
 require __DIR__.'/auth.php';

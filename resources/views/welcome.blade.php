@@ -156,78 +156,137 @@
         </div>
     </section>
 
-    <!-- Event Series Section -->
-    <section id="events" class="py-20 bg-gradient-to-br from-yellow-50 to-green-50">
+    <section id="timeline-interactive" class="py-20 bg-gradient-to-br from-yellow-50 to-green-50 overflow-hidden">
         <div class="max-w-screen-xl mx-auto px-4">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">Rangkaian <span class="text-yellow-600">Acara</span></h2>
-                <p class="text-gray-600">Berbagai kegiatan inspiratif untuk mendukung karir, bisnis, dan pengembangan diri.</p>
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Rangkaian <span class="text-yellow-600">Timeline</span> Acara ACEED 2025</h2>
+                <p class="text-gray-600">Jelajahi setiap fase penting dari ACEED EXPO & COMPETIFEST 2025: Job For Youth: From Campus to Career, mulai dari persiapan hingga pengumuman pemenang.</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Card 1 -->
-                <div class="p-6 bg-white border-l-4 border-yellow-500 rounded-xl shadow hover:shadow-lg transition">
-                    <div class="flex items-start gap-3 mb-3">
-                        <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927C9.469 1.837 10.531 1.837 10.951 2.927l1.212 3.327h3.545c1.2 0 1.698 1.545.845 2.318l-2.89 2.647 1.021 3.457c.32 1.085-.94 1.976-1.908 1.316L10 13.187l-3.776 2.805c-.968.66-2.228-.231-1.908-1.316l1.021-3.457-2.89-2.647c-.853-.773-.355-2.318.845-2.318h3.545L9.049 2.927z"/>
-                        </svg>
-                        <h3 class="text-lg font-semibold text-gray-900">Webinar</h3>
-                    </div>
-                    <p class="text-sm text-gray-600">Webinar profesional seputar kerja, bisnis, dan beasiswa.</p>
-                </div>
 
-                <!-- Card 2 -->
-                <div class="p-6 bg-white border-l-4 border-green-500 rounded-xl shadow hover:shadow-lg transition">
-                    <div class="flex items-start gap-3 mb-3">
-                        <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M3 4a1 1 0 000 2h2v10a1 1 0 001 1h8a1 1 0 001-1V6h2a1 1 0 100-2H3zm6 0h2v2H9V4z"/>
-                        </svg>
-                        <h3 class="text-lg font-semibold text-gray-900">Career & Internship</h3>
-                    </div>
-                    <p class="text-sm text-gray-600">Akses langsung ke perusahaan & walk-in interview.</p>
-                </div>
+            <div class="relative w-full">
+                <div class="absolute hidden md:block left-1/2 transform -translate-x-1/2 w-1 bg-gray-300 h-full"></div>
 
-                <!-- Card 3 -->
-                <div class="p-6 bg-white border-l-4 border-indigo-500 rounded-xl shadow hover:shadow-lg transition">
-                    <div class="flex items-start gap-3 mb-3">
-                        <svg class="w-6 h-6 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M4 3a2 2 0 00-2 2v2h16V5a2 2 0 00-2-2H4zm14 5H2v7a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                        </svg>
-                        <h3 class="text-lg font-semibold text-gray-900">Entrepreneurship</h3>
-                    </div>
-                    <p class="text-sm text-gray-600">Pameran usaha mahasiswa, alumni, dan kolaborasi bisnis.</p>
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 md:gap-y-24">
 
-                <!-- Card 4 -->
-                <div class="p-6 bg-white border-l-4 border-blue-500 rounded-xl shadow hover:shadow-lg transition">
-                    <div class="flex items-start gap-3 mb-3">
-                        <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-1h2v1zm0-2H9V7h2v4z"/>
-                        </svg>
-                        <h3 class="text-lg font-semibold text-gray-900">Scholarship</h3>
-                    </div>
-                    <p class="text-sm text-gray-600">Informasi lengkap seputar beasiswa nasional & internasional.</p>
-                </div>
+                    <div class="md:col-start-1 md:text-right relative">
+                        <div class="md:pr-10">
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-yellow-500 md:border-l-0 md:border-r-4 md:border-yellow-500 transition hover:shadow-xl group">
+                                <div class="absolute hidden md:block right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-yellow-500 rounded-full z-10 border-4 border-white"></div>
+                                <div class="absolute hidden md:block right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 -mr-6 w-0 h-0 border-t-[8px] border-b-[8px] border-l-[16px] border-t-transparent border-b-transparent border-l-yellow-500"></div>
 
-                <!-- Card 5 -->
-                <div class="p-6 bg-white border-l-4 border-purple-500 rounded-xl shadow hover:shadow-lg transition">
-                    <div class="flex items-start gap-3 mb-3">
-                        <svg class="w-6 h-6 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M5 3a1 1 0 00-1 1v4h12V4a1 1 0 00-1-1H5zM4 9v7a1 1 0 001 1h10a1 1 0 001-1V9H4z"/>
-                        </svg>
-                        <h3 class="text-lg font-semibold text-gray-900">Sponsor Session</h3>
+                                <h3 class="text-lg font-bold text-yellow-700 mb-2">ACEED Competifest Dimulai</h3>
+                                <p class="text-sm font-medium text-gray-500 mb-3">7 Juli 2025</p>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>Pembukaan Pendaftaran & Pengumpulan Karya untuk:
+                                        <ul class="list-disc list-inside ml-4">
+                                            <li>Lomba Reels</li>
+                                            <li>Career Escape Room</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-sm text-gray-600">Talkshow dan seminar bersama sponsor & industri ternama.</p>
-                </div>
 
-                <!-- Card 6 -->
-                <div class="p-6 bg-white border-l-4 border-pink-500 rounded-xl shadow hover:shadow-lg transition">
-                    <div class="flex items-start gap-3 mb-3">
-                        <svg class="w-6 h-6 text-pink-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M3 3a1 1 0 011-1h3.586a1 1 0 01.707.293l1.414 1.414A1 1 0 0010.414 4H16a1 1 0 011 1v2H3V3zM3 8h14v9a1 1 0 01-1 1H4a1 1 0 01-1-1V8z"/>
-                        </svg>
-                        <h3 class="text-lg font-semibold text-gray-900">Bazaar</h3>
+                    <div class="md:col-start-2 relative">
+                        <div class="md:pl-10">
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500 transition hover:shadow-xl group">
+                                <div class="absolute hidden md:block left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-green-500 rounded-full z-10 border-4 border-white"></div>
+                                <div class="absolute hidden md:block left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2 -ml-6 w-0 h-0 border-t-[8px] border-b-[8px] border-r-[16px] border-t-transparent border-b-transparent border-r-green-500"></div>
+
+                                <h3 class="text-lg font-bold text-green-700 mb-2">ACEED Webinar Pekan 1</h3>
+                                <p class="text-sm font-medium text-gray-500 mb-3">4 - 7 Agustus 2025</p>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>4 Agustus: Pembukaan Rangkaian Acara & Sesi "Ready2Work By ACEED".</li>
+                                    <li>5 - 7 Agustus: Sesi Webinar Slot 1 - 12.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-sm text-gray-600">Ajang promosi & penjualan UMKM, alumni, dan mahasiswa.</p>
+
+                    <div class="md:col-start-1 md:text-right relative">
+                        <div class="md:pr-10">
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-500 md:border-l-0 md:border-r-4 md:border-blue-500 transition hover:shadow-xl group">
+                                <div class="absolute hidden md:block right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-blue-500 rounded-full z-10 border-4 border-white"></div>
+                                <div class="absolute hidden md:block right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 -mr-6 w-0 h-0 border-t-[8px] border-b-[8px] border-l-[16px] border-t-transparent border-b-transparent border-l-blue-500"></div>
+
+                                <h3 class="text-lg font-bold text-blue-700 mb-2">ACEED Webinar Pekan 2</h3>
+                                <p class="text-sm font-medium text-gray-500 mb-3">12 - 14 Agustus 2025</p>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>Lanjutan Sesi Webinar Slot 13 - 23.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-start-2 relative">
+                        <div class="md:pl-10">
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-purple-500 transition hover:shadow-xl group">
+                                <div class="absolute hidden md:block left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-purple-500 rounded-full z-10 border-4 border-white"></div>
+                                <div class="absolute hidden md:block left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2 -ml-6 w-0 h-0 border-t-[8px] border-b-[8px] border-r-[16px] border-t-transparent border-b-transparent border-r-purple-500"></div>
+
+                                <h3 class="text-lg font-bold text-purple-700 mb-2">Penutupan Kompetisi & Webinar Akhir</h3>
+                                <p class="text-sm font-medium text-gray-500 mb-3">21 - 24 Agustus 2025</p>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>21 - 24 Agustus: Sesi Webinar Slot 24 - 29.</li>
+                                    <li>23 Agustus: Penutupan Pendaftaran & Pengumpulan Karya Kompetisi (Lomba Reels & Career Escape Room).</li>
+                                    <li>24 Agustus: Penutupan Rangkaian ACEED Webinar 2025.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-start-1 md:text-right relative">
+                        <div class="md:pr-10">
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-indigo-500 md:border-l-0 md:border-r-4 md:border-indigo-500 transition hover:shadow-xl group">
+                                <div class="absolute hidden md:block right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-indigo-500 rounded-full z-10 border-4 border-white"></div>
+                                <div class="absolute hidden md:block right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 -mr-6 w-0 h-0 border-t-[8px] border-b-[8px] border-l-[16px] border-t-transparent border-b-transparent border-l-indigo-500"></div>
+
+                                <h3 class="text-lg font-bold text-indigo-700 mb-2">ACEED EXPO & ACEED SEMINAR Hari 1</h3>
+                                <p class="text-sm font-medium text-gray-500 mb-3">Selasa, 9 September 2025</p>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>Upacara Pembukaan Formal ACEED EXPO.</li>
+                                    <li>Sesi Inspiration Talk & Company Talk.</li>
+                                    <li>Seminar Sesi 1 & 2 (Insight Session by Company).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-start-2 relative">
+                        <div class="md:pl-10">
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-pink-500 transition hover:shadow-xl group">
+                                <div class="absolute hidden md:block left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-pink-500 rounded-full z-10 border-4 border-white"></div>
+                                <div class="absolute hidden md:block left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2 -ml-6 w-0 h-0 border-t-[8px] border-b-[8px] border-r-[16px] border-t-transparent border-b-transparent border-r-pink-500"></div>
+
+                                <h3 class="text-lg font-bold text-pink-700 mb-2">ACEED EXPO & ACEED SEMINAR Hari 2</h3>
+                                <p class="text-sm font-medium text-gray-500 mb-3">Rabu, 10 September 2025</p>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>Ready2Work by ACEED: Talkshow Career Preparation.</li>
+                                    <li>ACEED Competifest: Career Innovation Challenge.</li>
+                                    <li>Seminar Sesi 3 & 4.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-start-1 md:text-right relative">
+                        <div class="md:pr-10">
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-teal-500 md:border-l-0 md:border-r-4 md:border-teal-500 transition hover:shadow-xl group">
+                                <div class="absolute hidden md:block right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-teal-500 rounded-full z-10 border-4 border-white"></div>
+                                <div class="absolute hidden md:block right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 -mr-6 w-0 h-0 border-t-[8px] border-b-[8px] border-l-[16px] border-t-transparent border-b-transparent border-l-teal-500"></div>
+
+                                <h3 class="text-lg font-bold text-teal-700 mb-2">ACEED EXPO Hari & ACEED SEMINAR Hari 3 </h3>
+                                <p class="text-sm font-medium text-gray-500 mb-3">Kamis, 11 September 2025</p>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>Insight Session by Entrepreneurship & Scholarship.</li>
+                                    <li>Seminar Sesi 5 & 6.</li>
+                                    <li>Pengumuman Pemenang ACEED Competifest.</li>
+                                    <li>Penutupan Resmi ACEED EXPO 2025.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
