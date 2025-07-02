@@ -5,28 +5,22 @@
 @section('content')
 <div class="p-6 bg-gray-50">
     <div class="bg-white p-8 rounded-lg shadow-lg max-w-6xl mx-auto">
-        <!-- Header -->
         <div class="text-left mb-6">
             <h1 class="text-xl font-bold text-black">LAYOUT ACEED JOB FAIR 2025</h1>
             <p class="text-sm text-gray-700">Auditorium, Universitas Andalas</p>
             <p class="text-sm text-gray-700">Skala 1:100</p>
         </div>
 
-        <!-- Main Layout Container -->
         <div class="relative bg-white border-2 border-gray-600 mx-auto rounded-lg" style="width: 700px; height: 550px;">
             
-            <!-- Top entrance curved section -->
             <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-24 h-6 border-2 border-gray-600 rounded-t-full bg-white"></div>
             
-            <!-- Stage Area with decoration -->
             <div class="absolute top-8 left-1/2 transform -translate-x-1/2 bg-amber-800 text-white text-center px-6 py-2 rounded shadow-md" style="width: 160px;">
                 <div class="text-sm font-bold">STAGE</div>
                 <div class="text-xs font-normal bg-gray-600 px-2 py-1 mt-1 rounded">DECORATION</div>
             </div>
 
-            <!-- Pink seating area background -->
             <div class="absolute top-24 left-1/2 transform -translate-x-1/2 bg-pink-200 rounded-lg p-3" style="width: 350px; height: 320px;">
-                <!-- Audience seating represented as grid pattern -->
                 <div class="mt-4">
                     <?php for($row = 0; $row < 12; $row++): ?>
                         <div class="flex justify-center mb-1">
@@ -38,7 +32,6 @@
                 </div>
             </div>
 
-            <!-- Left Registration Area (Light Green) -->
             <div class="absolute top-16 left-4 bg-green-200 rounded-lg p-2" style="width: 100px; height: 200px;">
                 <!-- Top section with magenta bar (Operator) -->
                 <div class="w-full h-4 bg-pink-600 mb-2 rounded flex items-center justify-center">
