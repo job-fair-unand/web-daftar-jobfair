@@ -3,308 +3,301 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="p-6 bg-gray-50">
-    <div class="bg-white p-8 rounded-lg shadow-lg max-w-6xl mx-auto">
-        <div class="text-left mb-6">
-            <h1 class="text-xl font-bold text-black">LAYOUT ACEED JOB FAIR 2025</h1>
-            <p class="text-sm text-gray-700">Auditorium, Universitas Andalas</p>
-            <p class="text-sm text-gray-700">Skala 1:100</p>
-        </div>
+<style>
+        body, html {
+            margin: 0; padding: 0;
+            overflow: hidden;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f1f5f9;
+        }
+        .main-container { display: flex; flex-direction: column; height: 100vh; }
+        @media (min-width: 768px) { .main-container { flex-direction: row; } }
+        .viewport {
+            flex-grow: 1; position: relative; overflow: auto;
+            display: grid; place-items: center; background-color: #e2e8f0;
+        }
+        .layout-grid {
+            display: grid; transform-origin: 0 0;
+            transition: transform 0.2s ease-out;
+        }
+        .layout-grid > * {
+            grid-area: 1 / 1 / 2 / 2;
+            width: 100%; height: auto;
+        }
+        .svg-overlay { height: 100%; pointer-events: none; }
+        .booth-outline {
+            fill: rgba(99, 102, 241, 0.2); stroke: #6366f1;
+            stroke-width: 4; opacity: 0;
+            transition: all 0.2s; cursor: pointer; pointer-events: auto;
+        }
+        .booth-outline.highlight, .booth-outline.active { opacity: 1; }
+        /* Style untuk booth yang sudah diambil */
+        .booth-outline.taken {
+            fill: rgba(107, 114, 128, 0.5); /* gray-500 transparan */
+            stroke: #4b5563; /* gray-600 */
+            cursor: not-allowed;
+            opacity: 1;
+        }
+        .info-container {
+            width: 100%; background-color: white; padding: 1.5rem;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1); overflow-y: auto;
+        }
+        @media (min-width: 768px) { .info-container { width: 350px; flex-shrink: 0; } }
+        .zoom-controls {
+            position: absolute; bottom: 1rem; left: 1rem; z-index: 10;
+            display: flex; gap: 0.5rem;
+        }
+        .zoom-controls button {
+            width: 3rem; height: 3rem;
+            border-radius: 9999px; border: 1px solid #ccc;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 1.5rem; font-weight: bold;
+            cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
 
-        <div class="relative bg-white border-2 border-gray-600 mx-auto rounded-lg" style="width: 700px; height: 550px;">
-            
-            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-24 h-6 border-2 border-gray-600 rounded-t-full bg-white"></div>
-            
-            <div class="absolute top-8 left-1/2 transform -translate-x-1/2 bg-amber-800 text-white text-center px-6 py-2 rounded shadow-md" style="width: 160px;">
-                <div class="text-sm font-bold">STAGE</div>
-                <div class="text-xs font-normal bg-gray-600 px-2 py-1 mt-1 rounded">DECORATION</div>
+    <div class="main-container">
+        <div class="viewport">
+            <div id="layout-grid" class="layout-grid">
+                <img id="jobfair-layout" src="{{ asset('assets/images/layout-aceed.png') }}" alt="Layout Job Fair" data-original-width="2565" data-original-height="2693">
+                <svg id="svg-overlay" class="svg-overlay"></svg>
             </div>
-
-            <div class="absolute top-24 left-1/2 transform -translate-x-1/2 bg-pink-200 rounded-lg p-3" style="width: 350px; height: 320px;">
-                <div class="mt-4">
-                    <?php for($row = 0; $row < 12; $row++): ?>
-                        <div class="flex justify-center mb-1">
-                            <?php for($seat = 0; $seat < 40; $seat++): ?>
-                                <div class="w-1 h-1 bg-gray-900 rounded-sm mr-px"></div>
-                            <?php endfor; ?>
-                        </div>
-                    <?php endfor; ?>
-                </div>
-            </div>
-
-            <div class="absolute top-16 left-4 bg-green-200 rounded-lg p-2" style="width: 100px; height: 200px;">
-                <!-- Top section with magenta bar (Operator) -->
-                <div class="w-full h-4 bg-pink-600 mb-2 rounded flex items-center justify-center">
-                    <span class="text-white text-xs font-bold">Operator</span>
-                </div>
-                
-                <!-- Purple photobooth -->
-                <div class="w-full h-10 bg-purple-700 mb-2 rounded flex items-center justify-center">
-                    <span class="text-white text-xs font-bold">PHOTO</span>
-                </div>
-                
-                <!-- Green pojok karir -->
-                <div class="w-full h-20 bg-green-600 rounded flex items-center justify-center">
-                    <span class="text-white text-xs font-bold transform -rotate-90">POJOK KARIR</span>
-                </div>
-            </div>
-
-            <!-- Extended left green area (outdoor area) -->
-            <div class="absolute top-56 left-0 bg-green-200 rounded-r-lg border-2 border-dashed border-green-400" style="width: 50px; height: 140px;"></div>
-
-            <!-- Right Side Room (Light Blue) -->
-            <div class="absolute top-16 right-4 bg-blue-200 rounded-lg flex items-center justify-center" style="width: 90px; height: 120px;">
-                <span class="text-blue-800 text-xs font-bold transform rotate-90">SIDE ROOM</span>
-            </div>
-
-            <!-- Pilar Auditorium (circles) -->
-            <div class="absolute top-36 left-20 w-8 h-8 bg-amber-100 rounded-full border-2 border-amber-600"></div>
-            <div class="absolute top-36 right-20 w-8 h-8 bg-amber-100 rounded-full border-2 border-amber-600"></div>
-
-            <!-- Bottom booth areas -->
-            
-            <!-- Left side booths -->
-            <div class="absolute bottom-24 left-8">
-                <!-- Bronze booths (bottom left, 2 rows of 3) -->
-                <div class="grid grid-cols-3 gap-1 mb-2">
-                    <?php for($i = 0; $i < 6; $i++): ?>
-                        <div class="w-6 h-8 bg-amber-700 rounded shadow"></div>
-                    <?php endfor; ?>
-                </div>
-            </div>
-
-            <!-- Left Gold booths (vertical column) -->
-            <div class="absolute bottom-24 left-32">
-                <div class="space-y-1">
-                    <?php for($i = 0; $i < 3; $i++): ?>
-                        <div class="w-6 h-6 bg-yellow-500 rounded shadow"></div>
-                    <?php endfor; ?>
-                </div>
-            </div>
-
-            <!-- Left Silver booths (vertical column) -->
-            <div class="absolute bottom-24 left-44">
-                <div class="space-y-1">
-                    <?php for($i = 0; $i < 3; $i++): ?>
-                        <div class="w-6 h-6 bg-red-600 rounded shadow"></div>
-                    <?php endfor; ?>
-                </div>
-            </div>
-
-            <!-- Center Platinum booths (2x4 grid) -->
-            <div class="absolute bottom-24 left-1/2 transform -translate-x-1/2">
-                <div class="grid grid-cols-2 gap-1">
-                    <?php for($i = 0; $i < 8; $i++): ?>
-                        <div class="w-10 h-6 bg-blue-700 rounded shadow" data-id="booth-blue-<?= $i ?>"></div>
-                    <?php endfor; ?>
-                </div>
-            </div>
-
-            <!-- Right Silver booths (vertical column) -->
-            <div class="absolute bottom-24 right-44">
-                <div class="space-y-1">
-                    <?php for($i = 0; $i < 3; $i++): ?>
-                        <div class="w-6 h-6 bg-red-600 rounded shadow"></div>
-                    <?php endfor; ?>
-                </div>
-            </div>
-
-            <!-- Right Gold booths (vertical column) -->
-            <div class="absolute bottom-24 right-32">
-                <div class="space-y-1">
-                    <?php for($i = 0; $i < 3; $i++): ?>
-                        <div class="w-6 h-6 bg-yellow-500 rounded shadow"></div>
-                    <?php endfor; ?>
-                </div>
-            </div>
-
-            <!-- Right Black area -->
-            <div class="absolute bottom-24 right-0 bg-black rounded-l-lg" style="width: 80px; height: 100px;"></div>
-
-            <!-- Bottom Black exit area -->
-            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black rounded-t-lg" style="width: 200px; height: 16px;"></div>
-            
-            <!-- Bottom entrance curved section -->
-            <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-6 border-2 border-gray-600 rounded-b-full bg-white"></div>
-
-            <!-- Right side external area with purple background (Tangga area) -->
-            <div class="absolute top-8 -right-16 bg-purple-100 rounded-lg p-1" style="width: 70px; height: 420px;">
-                
-                <!-- Purple Tangga area at top -->
-                <div class="w-full h-16 bg-purple-400 rounded flex items-center justify-center mb-1">
-                    <span class="text-white text-xs font-bold transform rotate-90">TANGGA</span>
-                </div>
-                
-                <!-- UMKM booths grid (2 columns) -->
-                <div class="grid grid-cols-2 gap-1 mb-2">
-                    <?php for($i = 0; $i < 24; $i++): ?>
-                        <div class="w-5 h-5 bg-orange-500 rounded-sm"></div>
-                    <?php endfor; ?>
-                </div>
-                
-                <!-- Bottom curved UMKM booths -->
-                <div class="relative">
-                    <div class="grid grid-cols-4 gap-1">
-                        <?php for($i = 0; $i < 8; $i++): ?>
-                            <div class="w-3 h-3 bg-orange-500 rounded-sm"></div>
-                        <?php endfor; ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Entrance arrows and labels -->
-            <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-center space-x-6">
-                <div class="text-center">
-                    <div class="text-2xl font-bold">←</div>
-                    <div class="text-xs font-bold">MASUK</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-2xl font-bold">→</div>
-                    <div class="text-xs font-bold">MASUK</div>
-                </div>
-            </div>
-
-            <!-- Side Labels with better positioning -->
-            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -rotate-90 text-xs font-bold text-gray-700" style="left: -100px;">
-                Booth Khusus dan Operator
-            </div>
-
-            <div class="absolute right-0 top-1/4 transform -translate-y-1/2 rotate-90 text-xs font-bold text-gray-700" style="right: -30px;">
-                TANGGA
-            </div>
-
-            <!-- Keluar label at bottom -->
-            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs font-bold text-gray-700" style="bottom: -25px;">
-                KELUAR
+            <div class="zoom-controls">
+                <button id="zoom-in">+</button>
+                <button id="zoom-out">-</button>
+                <button id="reset-zoom">⟲</button>
             </div>
         </div>
 
-        <!-- Legend with improved styling to match the image -->
-        <div class="mt-10">
-            <h3 class="font-bold text-lg mb-6">Keterangan:</h3>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-sm">
-                <div class="flex items-center">
-                    <div class="w-6 h-6 bg-blue-700 mr-3 rounded shadow"></div>
-                    <div>
-                        <div class="font-semibold">Booth Platinum</div>
-                        <div class="text-xs text-gray-600">Uk: 3x4m</div>
-                    </div>
-                </div>
-                
-                <div class="flex items-center">
-                    <div class="w-6 h-6 bg-red-600 mr-3 rounded shadow"></div>
-                    <div>
-                        <div class="font-semibold">Booth Silver</div>
-                        <div class="text-xs text-gray-600">Uk: 2x3m</div>
-                    </div>
-                </div>
-                
-                <div class="flex items-center">
-                    <div class="w-6 h-6 bg-orange-500 mr-3 rounded shadow"></div>
-                    <div>
-                        <div class="font-semibold">Booth UMKM</div>
-                        <div class="text-xs text-gray-600">Uk: 2x3m</div>
-                    </div>
-                </div>
-                
-                <div class="flex items-center">
-                    <div class="w-6 h-6 bg-purple-700 mr-3 rounded shadow"></div>
-                    <div>
-                        <div class="font-semibold">Photobooth</div>
-                        <div class="text-xs text-gray-600">Uk: 2x3m</div>
-                    </div>
-                </div>
-                
-                <div class="flex items-center">
-                    <div class="w-6 h-6 bg-yellow-500 mr-3 rounded shadow"></div>
-                    <div>
-                        <div class="font-semibold">Booth Gold</div>
-                        <div class="text-xs text-gray-600">Uk: 2x3m</div>
-                    </div>
-                </div>
-                
-                <div class="flex items-center">
-                    <div class="w-6 h-6 bg-amber-700 mr-3 rounded shadow"></div>
-                    <div>
-                        <div class="font-semibold">Booth Bronze</div>
-                        <div class="text-xs text-gray-600">Uk: 2x3m</div>
-                    </div>
-                </div>
-                
-                <div class="flex items-center">
-                    <div class="w-6 h-6 bg-green-600 mr-3 rounded shadow"></div>
-                    <div>
-                        <div class="font-semibold">Pojok Karir</div>
-                        <div class="text-xs text-gray-600">Uk: 2x3m</div>
-                    </div>
-                </div>
-                
-                <div class="flex items-center">
-                    <div class="w-6 h-6 bg-purple-400 mr-3 rounded shadow"></div>
-                    <div class="font-semibold">Tangga</div>
-                </div>
-                
-                <div class="flex items-center">
-                    <div class="w-6 h-6 bg-green-200 border-2 border-dashed border-green-400 mr-3 rounded"></div>
-                    <div class="font-semibold">Area Outdoor</div>
-                </div>
-                
-                <div class="flex items-center">
-                    <div class="w-6 h-6 bg-amber-100 border-2 border-amber-600 rounded-full mr-3"></div>
-                    <div class="font-semibold">Pilar Auditorium</div>
-                </div>
+        <div class="info-container">
+            <h1 class="text-2xl font-bold text-slate-800">ACEED Job Fair 2025</h1>
+            <p class="text-slate-500 mb-4 border-b pb-4">Pilih Booth</p>
+            
+            <div id="info-panel" class="mb-6">
+                <p class="text-slate-600">Silakan klik salah satu booth di peta untuk memilih booth.</p>
             </div>
+
+            <div id="selected-list-container">
+                <h2 class="text-xl font-bold text-slate-800">Daftar Pilihan Anda</h2>
+                <ul id="selected-list" class="mt-2 list-disc list-inside text-slate-700">
+                    <li id="no-selection" class="text-slate-500 italic">Belum ada booth yang dipilih.</li>
+                </ul>
+            </div>
+
+            <!-- Tambahkan tombol Lanjutkan Pembayaran di sini -->
+            <button id="proceed-payment-btn" class="w-full mt-4 bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+                Lanjutkan Pembayaran
+            </button>
         </div>
-
-        <!-- Button Pilih Booth -->
-        <div class="mt-6 text-center">
-            <form id="pilih-booth-form" action="{{ route('company.pilih-booth') }}" method="POST" style="display:inline;">
-                @csrf
-                <input type="hidden" name="booths" id="booths-input">
-                <button id="pilih-booth-btn" class="px-4 py-2 bg-gray-400 text-white rounded shadow cursor-not-allowed" disabled>
-                    Pilih Booth
-                </button>
-            </form>
-        </div>
-
-        <!-- Script untuk interaktivitas -->
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const booths = document.querySelectorAll('.bg-blue-700, .bg-yellow-500, .bg-red-600');
-                const selectedBooths = new Set();
-                const button = document.getElementById('pilih-booth-btn');
-
-                booths.forEach(booth => {
-                    booth.addEventListener('click', function() {
-                        if (selectedBooths.has(booth)) {
-                            selectedBooths.delete(booth);
-                            booth.classList.remove('ring-4', 'ring-blue-300');
-                        } else {
-                            selectedBooths.add(booth);
-                            booth.classList.add('ring-4', 'ring-blue-300');
-                        }
-
-                        // Update button state
-                        if (selectedBooths.size > 0) {
-                            button.disabled = false;
-                            button.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                            button.classList.add('bg-blue-600', 'hover:bg-blue-700', 'cursor-pointer');
-                        } else {
-                            button.disabled = true;
-                            button.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'cursor-pointer');
-                            button.classList.add('bg-gray-400', 'cursor-not-allowed');
-                        }
-                    });
-                });
-
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const boothData = Array.from(selectedBooths).map(booth => booth.dataset.id);
-                    document.getElementById('booths-input').value = boothData.join(',');
-                    document.getElementById('pilih-booth-form').submit();
-                });
-            });
-        </script>
     </div>
-</div>
+
+    <script id="boothData" type="application/json">
+    [
+        {"coords": "1018,1603,1108,1666", "name": "Booth Gold 1"},
+        {"coords": "1118,1603,1213,1664", "name": "Booth Gold 2"},
+        {"coords": "1220,1603,1311,1669", "name": "Booth Gold 3"},
+        {"coords": "1320,1603,1410,1664", "name": "Booth Gold 4"},
+        {"coords": "1420,1603,1515,1666", "name": "Booth Gold 5"},
+        {"coords": "1522,1603,1613,1666", "name": "Booth Gold 6"},
+        {"coords": "1043,1269,1106,1362", "name": "Booth Gold 7"},
+        {"coords": "1510,1259,1576,1354", "name": "Booth Gold 8"},
+        {"coords": "904,1269,967,1364", "name": "Booth Silver 1"},
+        {"coords": "1043,1367,1106,1459", "name": "Booth Silver 2"},
+        {"coords": "1045,1466,1106,1561", "name": "Booth Silver 3"},
+        {"coords": "1510,1362,1576,1454", "name": "Booth Silver 4"},
+        {"coords": "1510,1459,1576,1554", "name": "Booth Silver 5"},
+        {"coords": "1656,1259,1717,1357", "name": "Booth Silver 6"},
+        {"coords": "1198,1174,1315,1264", "name": "Booth Platinum 1"},
+        {"coords": "1320,1177,1435,1262", "name": "Booth Platinum 2"},
+        {"coords": "1198,1267,1315,1357", "name": "Booth Platinum 3"},
+        {"coords": "1320,1267,1432,1357", "name": "Booth Platinum 4"},
+        {"coords": "1201,1359,1315,1449", "name": "Booth Platinum 5"},
+        {"coords": "1318,1359,1432,1447", "name": "Booth Platinum 6"},
+        {"coords": "1198,1452,1313,1542", "name": "Booth Platinum 7"},
+        {"coords": "1318,1454,1435,1539", "name": "Booth Platinum 8"},
+        {"coords": "599,1306,663,1403", "name": "Booth Bronze 1"},
+        {"coords": "602,1406,663,1503", "name": "Booth Bronze 2"},
+        {"coords": "604,1505,663,1600", "name": "Booth Bronze 3"},
+        {"coords": "672,1613,762,1669", "name": "Booth Bronze 4"},
+        {"coords": "767,1610,862,1671", "name": "Booth Bronze 5"},
+        {"coords": "901,1367,967,1464", "name": "Booth Bronze 6"},
+        {"coords": "906,1466,965,1561", "name": "Booth Bronze 7"},
+        {"coords": "1656,1359,1717,1452", "name": "Booth Bronze 8"},
+        {"coords": "1656,1462,1720,1554", "name": "Booth Bronze 9"}
+    ]
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const image = document.getElementById('jobfair-layout');
+        const layoutGrid = document.getElementById('layout-grid');
+        const svgOverlay = document.getElementById('svg-overlay');
+        const infoPanel = document.getElementById('info-panel');
+        const selectedList = document.getElementById('selected-list');
+        const proceedPaymentBtn = document.getElementById('proceed-payment-btn');
+        
+        let activeOutline = null;
+        let scale = 1.0;
+        const zoomStep = 0.25;
+        let selectedBooth = null;
+        const outlineElements = {};
+
+        // Fungsi untuk mengupdate daftar pilihan di UI
+        function updateSelectedListUI() {
+            selectedList.innerHTML = ''; // Kosongkan daftar
+            if (!selectedBooth) {
+                selectedList.innerHTML = '<li id="no-selection" class="text-slate-500 italic">Belum ada booth yang dipilih.</li>';
+                proceedPaymentBtn.disabled = true; // Nonaktifkan tombol jika tidak ada booth yang dipilih
+            } else {
+                const li = document.createElement('li');
+                li.className = 'flex justify-between items-center mb-1';
+                li.textContent = selectedBooth;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = '✖';
+                removeBtn.className = 'text-red-500 hover:text-red-700 font-bold text-xs ml-2';
+                removeBtn.onclick = () => deselectBooth(selectedBooth);
+                
+                li.appendChild(removeBtn);
+                selectedList.appendChild(li);
+                proceedPaymentBtn.disabled = false; // Aktifkan tombol jika ada booth yang dipilih
+            }
+        }
+
+        // Fungsi untuk memilih booth
+        function selectBooth(boothName) {
+            if (selectedBooth) {
+                const prevOutline = outlineElements[selectedBooth];
+                if (prevOutline) {
+                    prevOutline.classList.remove('taken', 'active');
+                    const prevTitleElement = prevOutline.querySelector('title');
+                    if (prevTitleElement) {
+                        prevOutline.removeChild(prevTitleElement);
+                    }
+                }
+            }
+            
+            selectedBooth = boothName;
+            const outline = outlineElements[boothName];
+            if (outline) {
+                outline.classList.add('taken');
+                const titleElement = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+                titleElement.textContent = 'Booth sudah diambil';
+                outline.appendChild(titleElement);
+            }
+            updateSelectedListUI();
+            infoPanel.innerHTML = '<p class="text-slate-600">Anda telah memilih booth. Pilih booth lain untuk mengganti pilihan.</p>';
+        }
+
+        // Fungsi untuk membatalkan pilihan booth
+        function deselectBooth(boothName) {
+            if (selectedBooth === boothName) {
+                const outline = outlineElements[boothName];
+                if (outline) {
+                    outline.classList.remove('taken', 'active');
+                    const titleElement = outline.querySelector('title');
+                    if (titleElement) {
+                        outline.removeChild(titleElement);
+                    }
+                }
+                selectedBooth = null;
+                updateSelectedListUI();
+            }
+        }
+
+        // Event listener untuk tombol Lanjutkan Pembayaran
+        proceedPaymentBtn.addEventListener('click', () => {
+            if (selectedBooth) {
+                // Create a form to submit the selected booth
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("company.pembayaran") }}';
+                
+                // Add CSRF token
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                form.appendChild(csrfToken);
+                
+                // Add the selected booth
+                const boothInput = document.createElement('input');
+                boothInput.type = 'hidden';
+                boothInput.name = 'booths';
+                boothInput.value = selectedBooth;
+                form.appendChild(boothInput);
+                
+                // Append form to body and submit
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+
+        function createSvgOutlines() {
+            const boothData = JSON.parse(document.getElementById('boothData').textContent);
+            const originalWidth = image.dataset.originalWidth;
+            const originalHeight = image.dataset.originalHeight;
+
+            svgOverlay.setAttribute('viewBox', `0 0 ${originalWidth} ${originalHeight}`);
+            svgOverlay.innerHTML = '';
+
+            boothData.forEach(booth => {
+                const coords = booth.coords.split(',').map(Number);
+                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                rect.setAttribute('x', coords[0]);
+                rect.setAttribute('y', coords[1]);
+                rect.setAttribute('width', coords[2] - coords[0]);
+                rect.setAttribute('height', coords[3] - coords[1]);
+                rect.classList.add('booth-outline');
+
+                outlineElements[booth.name] = rect;
+
+                rect.addEventListener('click', () => {
+                    if (selectedBooth === booth.name) {
+                        infoPanel.innerHTML = `<p class="text-red-600 font-bold">Booth "${booth.name}" sudah Anda pilih.</p>`;
+                        return;
+                    }
+                    
+                    infoPanel.innerHTML = `
+                        <h2 class="text-lg font-bold text-indigo-600">Detail Booth</h2>
+                        <p class="text-2xl font-semibold text-slate-800">${booth.name}</p>
+                        <button id="select-booth-btn" class="w-full mt-4 bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition-colors">
+                            ${selectedBooth ? 'Ganti dengan Booth Ini' : 'Pilih Booth Ini'}
+                        </button>
+                    `;
+
+                    document.getElementById('select-booth-btn').onclick = () => selectBooth(booth.name);
+
+                    if (activeOutline) activeOutline.classList.remove('active');
+                    rect.classList.add('active');
+                    activeOutline = rect;
+                });
+
+                rect.addEventListener('mouseenter', () => rect.classList.add('highlight'));
+                rect.addEventListener('mouseleave', () => {
+                    if (activeOutline !== rect) {
+                        rect.classList.remove('highlight');
+                    }
+                });
+                
+                svgOverlay.appendChild(rect);
+            });
+        }
+        
+        function applyZoom() {
+            layoutGrid.style.transform = `scale(${scale})`;
+        }
+        document.getElementById('zoom-in').addEventListener('click', () => { scale = Math.min(3.0, scale + zoomStep); applyZoom(); });
+        document.getElementById('zoom-out').addEventListener('click', () => { scale = Math.max(1.0, scale - zoomStep); applyZoom(); });
+        document.getElementById('reset-zoom').addEventListener('click', () => { scale = 1.0; applyZoom(); });
+
+        if (image.complete) {
+            createSvgOutlines();
+        } else {
+            image.addEventListener('load', createSvgOutlines);
+        }
+    });
+    </script>
 @endsection

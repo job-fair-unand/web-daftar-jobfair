@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Booth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -182,7 +183,16 @@ class CompanyController extends Controller
 
     public function prosesPilihBooth(Request $request)
     {
-        $booths = explode(',', $request->input('booths', ''));
+        $boothNames = explode(',', $request->input('booths', ''));
+        
+        // Fetch booth details from the database
+        $booths = Booth::whereIn('name', $boothNames)->get();
+        
+        if ($booths->isEmpty()) {
+            return redirect()->route('company.dashboard')
+                ->with('error', 'Booth tidak ditemukan. Silakan pilih booth lagi.');
+        }
+        
         return view('company.detail-pembayaran', compact('booths'));
     }
 }
