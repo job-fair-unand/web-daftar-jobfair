@@ -60,8 +60,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
 // Company Dashboard Routes (Protected)
 Route::middleware(['auth', 'verified', 'role:company'])->prefix('dashboard/company')->name('company.')->group(function () {
     Route::get('/', [CompanyController::class, 'index'])->name('dashboard');
-    Route::get('/pembayaran', [CompanyController::class, 'prosesPilihBooth'])->name('pembayaran');
-    Route::post('/pilih-booth', [CompanyController::class, 'prosesPilihBooth'])->name('pilih-booth');
+    Route::post('/pembayaran', [CompanyController::class, 'prosesPilihBooth'])->name('pembayaran');
 });
 
 // Sponsor Dashboard Routes (Protected)

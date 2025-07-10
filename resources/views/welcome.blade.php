@@ -39,7 +39,7 @@
     <section id="home" class="relative bg-gradient-to-br from-white to-green-50 pt-0 overflow-hidden">
         <div class="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-yellow-50 to-transparent"></div>
         <div class="max-w-screen-xl px-4 py-4 mx-auto lg:py-8">
-            <div class="grid lg:grid-cols-12 gap-8 items-center">
+            <div class="grid lg:grid-cols-12 gap-8 items-start">
                 <div class="lg:col-span-7 space-y-8 relative">
                     <div class="space-y-4">
                         <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-yellow-100 bg-yellow-50">
@@ -79,7 +79,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="lg:col-span-5 relative">
+                <div class="lg:col-span-5 relative mt-24">
                     <div class="absolute inset-0 bg-yellow-100 rounded-xl opacity-20 blur-3xl"></div>
                     <img src="/assets/images/job-fair-preview.jpg" 
                          alt="Job Fair Preview" 
