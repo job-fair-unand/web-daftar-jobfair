@@ -36,7 +36,7 @@
             <!-- Content will be loaded here -->
             <div id="detailContent" class="hidden">
                 <!-- Company Header -->
-                <div class="bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl p-6 mb-6">
+                <div class="bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl p-6 mb-4">
                     <div class="flex items-start space-x-6">
                         <div class="flex-shrink-0">
                             <div id="companyLogo" class="w-20 h-20 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
@@ -68,50 +68,7 @@
                     </div>
                 </div>
 
-                <!-- Stats Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-4">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-blue-600 text-sm font-medium">Total Transaksi</p>
-                                <p id="totalTransactions" class="text-2xl font-bold text-blue-800">0</p>
-                            </div>
-                            <div class="w-12 h-12 bg-blue-200 rounded-lg flex items-center justify-center">
-                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-4">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-green-600 text-sm font-medium">Booth Dimiliki</p>
-                                <p id="totalBooths" class="text-2xl font-bold text-green-800">0</p>
-                            </div>
-                            <div class="w-12 h-12 bg-green-200 rounded-lg flex items-center justify-center">
-                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-xl p-4">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-purple-600 text-sm font-medium">Hari Bergabung</p>
-                                <p id="daysSinceJoined" class="text-2xl font-bold text-purple-800">0</p>
-                            </div>
-                            <div class="w-12 h-12 bg-purple-200 rounded-lg flex items-center justify-center">
-                                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="companyBookingSection" class="mb-8"></div>
 
                 <!-- Tabs -->
                 <div class="border-b border-gray-200 mb-6">
@@ -121,9 +78,6 @@
                         </button>
                         <button onclick="switchTab('transactions')" id="transactionsTab" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
                             Riwayat Transaksi
-                        </button>
-                        <button onclick="switchTab('activity')" id="activityTab" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                            Aktivitas
                         </button>
                     </nav>
                 </div>
@@ -153,26 +107,8 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="space-y-4">
-                                <div class="border border-gray-200 rounded-lg p-4">
-                                    <h5 class="font-semibold text-gray-900 mb-3 flex items-center">
-                                        <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                                        </svg>
-                                        Aktivitas Terakhir
-                                    </h5>
-                                    <div class="space-y-3">
-                                        <div>
-                                            <p class="text-sm text-gray-500">Login Terakhir</p>
-                                            <p id="lastActivity" class="font-medium">-</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-500">Update Profil</p>
-                                            <p id="profileUpdated" class="font-medium">-</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div id="companyDataSection"></div>
                             </div>
                         </div>
                     </div>
@@ -183,19 +119,6 @@
                             <h5 class="font-semibold text-gray-900">Transaksi Terbaru</h5>
                             <div id="transactionsList" class="space-y-3">
                                 <!-- Transactions will be loaded here -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Activity Tab -->
-                    <div id="activityTabContent" class="tab-content hidden">
-                        <div class="space-y-4">
-                            <h5 class="font-semibold text-gray-900">Log Aktivitas</h5>
-                            <div class="text-gray-500 text-center py-8">
-                                <svg class="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                </svg>
-                                <p>Log aktivitas akan tersedia di versi mendatang</p>
                             </div>
                         </div>
                     </div>

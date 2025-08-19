@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\ScholarshipController;
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', [GuestController::class, 'index'])->name('home');
 
@@ -41,6 +42,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/perusahaan', [AdminController::class, 'showCompany'])->name('company');
     Route::get('/perusahaan/{company}/detail', [AdminController::class, 'getCompanyDetail'])->name('company.detail');
     Route::delete('/perusahaan/{company}', [AdminController::class, 'deleteCompany'])->name('company.delete');
+    Route::post('/transaction/{transaction}/verify', [AdminController::class, 'verifyTransaction']);
     
     Route::get('/umkm', [AdminController::class, 'showUmkm'])->name('umkm');
     Route::get('/umkm/{business}/detail', [AdminController::class, 'getBusinessDetail'])->name('umkm.detail');
@@ -61,6 +63,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
 Route::middleware(['auth', 'verified', 'role:company'])->prefix('dashboard/company')->name('company.')->group(function () {
     Route::get('/', [CompanyController::class, 'index'])->name('dashboard');
     Route::post('/pembayaran', [CompanyController::class, 'prosesPilihBooth'])->name('pembayaran');
+    Route::post('/transaksi', [TransactionController::class, 'store'])->name('transaksi.store');
+
+    Route::get('/booth', [CompanyController::class, 'showBooth'])->name('detail-booth');
 });
 
 // Sponsor Dashboard Routes (Protected)
@@ -78,10 +83,10 @@ Route::middleware(['auth', 'verified', 'role:umkm'])->prefix('dashboard/umkm')->
 });
 
 // Scholarship Dashboard Routes (Protected)
-// Route::middleware(['auth', 'verified', 'role:scholarship'])->prefix('dashboard/scholarship')->name('scholarship.')->group(function () {
-//     Route::get('/', function () {
-//         return view('scholarship.dashboard');
-//     })->name('dashboard');
-// });
+Route::middleware(['auth', 'verified', 'role:scholarship'])->prefix('dashboard/scholarship')->name('scholarship.')->group(function () {
+    Route::get('/', function () {
+        return view('scholarship.dashboard');
+    })->name('dashboard');
+});
 
 require __DIR__.'/auth.php';

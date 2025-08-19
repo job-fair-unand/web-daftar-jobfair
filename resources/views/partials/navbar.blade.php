@@ -65,6 +65,11 @@
                             <span class="relative z-10">Dashboard UMKM</span>
                             <div class="absolute inset-x-0 bottom-0 h-0.5 bg-green-600 transform {{ request()->routeIs('umkm*') ? 'scale-x-100' : 'scale-x-0' }} group-hover:scale-x-100 transition-transform duration-300"></div>
                         </a>
+                    @elseif (auth()->user()->role === 'scholarship')
+                        <a href="{{ route('scholarship.dashboard') }}" class="relative {{ request()->routeIs('scholarship*') ? 'text-green-600' : 'text-gray-700' }} hover:text-green-600 px-3 py-2 text-sm font-medium transition-colors duration-300 group">
+                            <span class="relative z-10">Dashboard Beasiswa</span>
+                            <div class="absolute inset-x-0 bottom-0 h-0.5 bg-green-600 transform {{ request()->routeIs('scholarship*') ? 'scale-x-100' : 'scale-x-0' }} group-hover:scale-x-100 transition-transform duration-300"></div>
+                        </a>
                     @endif
                 @endauth
             </div>

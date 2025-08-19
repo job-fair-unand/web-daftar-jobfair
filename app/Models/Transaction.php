@@ -14,6 +14,7 @@ class Transaction extends Model
         'approved_by',
         'approved_at',
         'amount',
+        'bukti_pembayaran',
     ];
 
     protected $casts = [

@@ -54,11 +54,33 @@
             font-size: 1.5rem; font-weight: bold;
             cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+        .booth-outline.your-booking {
+            stroke: #059669 !important; /* emerald-600 */
+            stroke-width: 6 !important;
+            fill: rgba(16, 185, 129, 0.25) !important; /* emerald-400 transparan */
+            opacity: 1 !important;
+            filter: drop-shadow(0 0 8px #05966988);
+        }
+
+        .has-pending .layout-grid {
+            opacity: 0.5; /* Membuat peta menjadi 50% transparan */
+            transition: all 0.3s ease-in-out; /* Membuat perubahan terlihat lebih halus */
+        }
+
+        .has-pending .booth-outline {
+            cursor: default; /* Ubah cursor menjadi standar */
+            pointer-events: none; /* Nonaktifkan semua event mouse (klik, hover, dll) */
+        }
+
+        /* Biarkan booth yang dibooking tetap terlihat jelas */
+        .has-pending .booth-outline.your-booking {
+            pointer-events: auto; /* Opsional: jika ingin tooltip tetap muncul */
+        }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
+    <div class="main-container @if($hasPending) has-pending @endif">
         <div class="viewport">
             <div id="layout-grid" class="layout-grid">
                 <img id="jobfair-layout" src="{{ asset('assets/images/layout-aceed.png') }}" alt="Layout Job Fair" data-original-width="2565" data-original-height="2693">
@@ -73,23 +95,41 @@
 
         <div class="info-container">
             <h1 class="text-2xl font-bold text-slate-800">ACEED Job Fair 2025</h1>
+
+            @if($hasPending)
+                <div class="my-8">
+                    <div class="text-2xl font-bold text-emerald-700 mb-2">Terima kasih!</div>
+                    <div class="text-slate-700 text-sm mb-4">
+                        Anda sudah melakukan booking booth.<br>
+                        Silakan menunggu proses verifikasi dari admin.<br>
+                        Informasi status booking akan dikirimkan melalui dashboard dan email Anda.
+                    </div>
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded mb-4">
+                        Jika Anda belum menerima konfirmasi dalam 1x24 jam, silakan hubungi panitia.
+                    </div>
+                    <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 p-4 rounded">
+                        <span class="font-semibold">Booth yang Anda booking:</span>
+                        <span class="font-bold text-lg">{{ $selectedBoothName ?? '-' }}</span>
+                    </div>
+                </div>
+            @else
             <p class="text-slate-500 mb-4 border-b pb-4">Pilih Booth</p>
-            
-            <div id="info-panel" class="mb-6">
-                <p class="text-slate-600">Silakan klik salah satu booth di peta untuk memilih booth.</p>
-            </div>
 
-            <div id="selected-list-container">
-                <h2 class="text-xl font-bold text-slate-800">Daftar Pilihan Anda</h2>
-                <ul id="selected-list" class="mt-2 list-disc list-inside text-slate-700">
-                    <li id="no-selection" class="text-slate-500 italic">Belum ada booth yang dipilih.</li>
-                </ul>
-            </div>
+                <div id="info-panel" class="mb-6">
+                    <p class="text-slate-600">Silakan klik salah satu booth di peta untuk memilih booth.</p>
+                </div>
 
-            <!-- Tambahkan tombol Lanjutkan Pembayaran di sini -->
-            <button id="proceed-payment-btn" class="w-full mt-4 bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
-                Lanjutkan Pembayaran
-            </button>
+                <div id="selected-list-container">
+                    <h2 class="text-xl font-bold text-slate-800">Daftar Pilihan Anda</h2>
+                    <ul id="selected-list" class="mt-2 list-disc list-inside text-slate-700">
+                        <li id="no-selection" class="text-slate-500 italic">Belum ada booth yang dipilih.</li>
+                    </ul>
+                </div>
+
+                <button id="proceed-payment-btn" class="w-full mt-4 bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+                    Lanjutkan Pembayaran
+                </button>
+            @endif
         </div>
     </div>
 
@@ -137,6 +177,9 @@
         const infoPanel = document.getElementById('info-panel');
         const selectedList = document.getElementById('selected-list');
         const proceedPaymentBtn = document.getElementById('proceed-payment-btn');
+        const hasPending = @json($hasPending);
+        const bookedBooths = @json($bookedBooths);
+        const selectedBoothName = @json($selectedBoothName);
         
         let activeOutline = null;
         let scale = 1.0;
@@ -208,32 +251,34 @@
         }
 
         // Event listener untuk tombol Lanjutkan Pembayaran
-        proceedPaymentBtn.addEventListener('click', () => {
-            if (selectedBooth) {
-                // Create a form to submit the selected booth
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '{{ route("company.pembayaran") }}';
-                
-                // Add CSRF token
-                const csrfToken = document.createElement('input');
-                csrfToken.type = 'hidden';
-                csrfToken.name = '_token';
-                csrfToken.value = '{{ csrf_token() }}';
-                form.appendChild(csrfToken);
-                
-                // Add the selected booth
-                const boothInput = document.createElement('input');
-                boothInput.type = 'hidden';
-                boothInput.name = 'booths';
-                boothInput.value = selectedBooth;
-                form.appendChild(boothInput);
-                
-                // Append form to body and submit
-                document.body.appendChild(form);
-                form.submit();
-            }
-        });
+        if (proceedPaymentBtn) { 
+            proceedPaymentBtn.addEventListener('click', () => {
+                if (selectedBooth) {
+                    // Create a form to submit the selected booth
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route("company.pembayaran") }}';
+                    
+                    // Add CSRF token
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+                    
+                    // Add the selected booth
+                    const boothInput = document.createElement('input');
+                    boothInput.type = 'hidden';
+                    boothInput.name = 'booths';
+                    boothInput.value = selectedBooth;
+                    form.appendChild(boothInput);
+                    
+                    // Append form to body and submit
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
 
         function createSvgOutlines() {
             const boothData = JSON.parse(document.getElementById('boothData').textContent);
@@ -254,36 +299,51 @@
 
                 outlineElements[booth.name] = rect;
 
-                rect.addEventListener('click', () => {
-                    if (selectedBooth === booth.name) {
-                        infoPanel.innerHTML = `<p class="text-red-600 font-bold">Booth "${booth.name}" sudah Anda pilih.</p>`;
-                        return;
-                    }
-                    
-                    infoPanel.innerHTML = `
-                        <h2 class="text-lg font-bold text-indigo-600">Detail Booth</h2>
-                        <p class="text-2xl font-semibold text-slate-800">${booth.name}</p>
-                        <button id="select-booth-btn" class="w-full mt-4 bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition-colors">
-                            ${selectedBooth ? 'Ganti dengan Booth Ini' : 'Pilih Booth Ini'}
-                        </button>
-                    `;
+                if (bookedBooths.includes(booth.name)) {
+                    rect.classList.add('taken');
+                    rect.style.pointerEvents = 'none';
+                }
 
-                    document.getElementById('select-booth-btn').onclick = () => selectBooth(booth.name);
+                if (selectedBoothName && booth.name === selectedBoothName) {
+                    rect.classList.add('your-booking');
+                    // Optionally, tambahkan title
+                    const titleElement = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+                    titleElement.textContent = 'Booth yang Anda booking';
+                    rect.appendChild(titleElement);
+                }
 
-                    if (activeOutline) activeOutline.classList.remove('active');
-                    rect.classList.add('active');
-                    activeOutline = rect;
-                });
+                if (!hasPending) {
+                    rect.addEventListener('click', () => {
+                        if (selectedBooth === booth.name) {
+                            infoPanel.innerHTML = `<p class="text-red-600 font-bold">Booth "${booth.name}" sudah Anda pilih.</p>`;
+                            return;
+                        }
+                        
+                        infoPanel.innerHTML = `
+                            <h2 class="text-lg font-bold text-indigo-600">Detail Booth</h2>
+                            <p class="text-2xl font-semibold text-slate-800">${booth.name}</p>
+                            <button id="select-booth-btn" class="w-full mt-4 bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition-colors">
+                                ${selectedBooth ? 'Ganti dengan Booth Ini' : 'Pilih Booth Ini'}
+                            </button>
+                        `;
 
-                rect.addEventListener('mouseenter', () => rect.classList.add('highlight'));
-                rect.addEventListener('mouseleave', () => {
-                    if (activeOutline !== rect) {
-                        rect.classList.remove('highlight');
-                    }
-                });
+                        document.getElementById('select-booth-btn').onclick = () => selectBooth(booth.name);
+
+                        if (activeOutline) activeOutline.classList.remove('active');
+                        rect.classList.add('active');
+                        activeOutline = rect;
+                    });
+
+                    rect.addEventListener('mouseenter', () => rect.classList.add('highlight'));
+                    rect.addEventListener('mouseleave', () => {
+                        if (activeOutline !== rect) {
+                            rect.classList.remove('highlight');
+                        }
+                    });
+                }
                 
                 svgOverlay.appendChild(rect);
-            });
+            }); 
         }
         
         function applyZoom() {

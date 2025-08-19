@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Models\Transaction;
 
 class CompanyController extends Controller
 {
@@ -178,21 +179,69 @@ class CompanyController extends Controller
     {
         $user = Auth::user();
         $company = $user->company;
-        return view('company.dashboard', compact('user', 'company'));
+
+        $selectedBoothName = null;
+        $hasPending = false;
+
+        $pendingTransaction = Transaction::where('company_id', $company->id)
+            ->whereIn('status', ['pending', 'approved'])
+            ->with('booth')
+            ->first();
+
+        if ($pendingTransaction) {
+            $hasPending = true;
+            $selectedBoothName = $pendingTransaction->booth->name ?? null;
+        }
+
+        $bookedBooths = Transaction::whereIn('status', ['pending', 'approved'])
+            ->pluck('booth_id')
+            ->toArray();
+
+        $bookedBooths = Booth::whereIn('id', $bookedBooths)->pluck('name')->toArray();
+
+        return view('company.dashboard', compact('hasPending', 'bookedBooths', 'selectedBoothName'));
     }
 
     public function prosesPilihBooth(Request $request)
     {
+        $user = Auth::user();
+        $company = $user->company;
+
+        // Cek jika perusahaan sudah booking booth (pending/approved)
+        $hasPending = Transaction::where('company_id', $company->id)
+            ->whereIn('status', ['pending', 'approved'])
+            ->exists();
+
+        if ($hasPending) {
+            return redirect()->route('company.dashboard')
+                ->with('error', 'Anda sudah melakukan booking booth. Silakan tunggu verifikasi admin sebelum booking lagi.');
+        }
+
         $boothNames = explode(',', $request->input('booths', ''));
-        
-        // Fetch booth details from the database
         $booths = Booth::whereIn('name', $boothNames)->get();
-        
+
         if ($booths->isEmpty()) {
             return redirect()->route('company.dashboard')
                 ->with('error', 'Booth tidak ditemukan. Silakan pilih booth lagi.');
         }
-        
+
         return view('company.detail-pembayaran', compact('booths'));
+    }
+
+    public function showBooth()
+    {
+        $user = Auth::user();
+        $company = $user->company;
+
+        // Ambil transaksi booth yang masih aktif (pending/approved)
+        $transaction = Transaction::where('company_id', $company->id)
+            ->whereIn('status', ['pending', 'approved'])
+            ->with('booth')
+            ->latest()
+            ->first();
+
+        $booth = $transaction ? $transaction->booth : null;
+
+        return view('company.detail-booth', compact('booth', 'transaction'));
     }
 }

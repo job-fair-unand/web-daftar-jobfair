@@ -34,6 +34,7 @@
                 </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     @foreach($booths as $booth)
+                    <input type="hidden" id="booth_id" value="{{ $booths[0]->id }}">
                     <div class="bg-gray-50 p-4 rounded-lg">
                         <div class="text-sm text-gray-500 mb-1">Jenis Booth</div>
                         <div class="font-semibold text-gray-800">{{ $booth->name }}</div>
@@ -319,15 +320,14 @@
     }
 
     function submitPayment() {
-        // Get form values
+        const booth_id = document.getElementById('booth_id').value;
         const nib = document.getElementById('company_nib').value;
         const npwp = document.getElementById('company_npwp').value;
         const address = document.getElementById('company_address').value;
         const pic = document.getElementById('company_pic').value;
         const position = document.getElementById('company_pic_position').value;
         const phone = document.getElementById('company_pic_phone').value;
-        
-        // Basic validation
+
         if (!uploadedFile) {
             Swal.fire({
                 title: 'Error',
@@ -338,7 +338,6 @@
             });
             return;
         }
-        
         if (!nib || !npwp || !address || !pic || !position || !phone) {
             Swal.fire({
                 title: 'Data Tidak Lengkap',
@@ -350,30 +349,55 @@
             return;
         }
 
-        // Disable button and show loading state
         const submitBtn = document.getElementById('submitBtn');
-        const originalText = submitBtn.innerText;
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="inline-block animate-spin mr-2">⏳</span> Mengirim...';
-        
-        // Simulate form submission (In a real app, you'd use AJAX/fetch here)
-        setTimeout(() => {
+
+        // Kirim data pakai FormData
+        const formData = new FormData();
+        formData.append('booth_id', booth_id);
+        formData.append('bukti_pembayaran', uploadedFile);
+        formData.append('nib', nib);
+        formData.append('npwp', npwp);
+        formData.append('address', address);
+        formData.append('pic', pic);
+        formData.append('pic_position', position);
+        formData.append('pic_phone', phone);
+
+        fetch('{{ route('company.transaksi.store') }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: formData
+        })
+        .then(async response => {
+            const data = await response.json();
+            if (response.ok && data.success) {
+                Swal.fire({
+                    title: 'Berhasil',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#059669'
+                }).then(() => {
+                    window.location.href = '{{ route("company.dashboard") }}';
+                });
+            } else {
+                throw new Error(data.message || 'Terjadi kesalahan');
+            }
+        })
+        .catch(error => {
             Swal.fire({
-                title: 'Berhasil',
-                text: 'Bukti pembayaran berhasil dikirim. Tim kami akan segera memverifikasi pembayaran Anda.',
-                icon: 'success',
+                title: 'Gagal',
+                text: error.message,
+                icon: 'error',
                 confirmButtonText: 'OK',
                 confirmButtonColor: '#059669'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // You could redirect here if needed
-                    // window.location.href = '/dashboard/company';
-                    submitBtn.innerText = 'Berhasil Dikirim';
-                    submitBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
-                    submitBtn.classList.add('bg-emerald-800');
-                }
             });
-        }, 2000);
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Kirim Bukti Pembayaran';
+        });
     }
 </script>
 @endsection
