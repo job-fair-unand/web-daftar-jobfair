@@ -15,6 +15,12 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->id();
             $table->string('logo');
+            $table->string('nib')->nullable();
+            $table->string('npwp')->nullable();
+            $table->string('address')->nullable();
+            $table->string('pic')->nullable();
+            $table->string('pic_position')->nullable();
+            $table->string('pic_phone')->nullable();
             $table->timestamps();
         });
     }

@@ -181,7 +181,7 @@
         
         <!-- Form Container -->
         <div class="form-container shadow-2xl rounded-2xl p-8">
-            <form id="registrationForm" action="{{ route('sponsor.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+            <form id="registrationForm" action="{{ route('register.sponsor.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">

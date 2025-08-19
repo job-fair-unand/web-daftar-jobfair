@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Company;
-use App\Models\User;
+use App\Models\Transaction;
 use App\Models\Scholarship;
 use App\Models\Business;
 use App\Models\Sponsor;
@@ -174,6 +174,12 @@ class AdminController extends Controller
     {
         try {
             $company->load(['user', 'transactions', 'booths']);
+
+            $activeTransaction = $company->transactions()
+                ->whereIn('status', ['pending', 'approved'])
+                ->with('booth')
+                ->latest()
+                ->first();
             
             return response()->json([
                 'success' => true,
@@ -187,6 +193,14 @@ class AdminController extends Controller
                         'address' => $company->user?->address,
                         'email_verified_at' => $company->user?->email_verified_at,
                         'created_at' => $company->user?->created_at,
+                    ],
+                    'company_data' => [
+                        'nib' => $company->nib,
+                        'npwp' => $company->npwp,
+                        'address' => $company->address,
+                        'pic' => $company->pic,
+                        'pic_position' => $company->pic_position,
+                        'pic_phone' => $company->pic_phone,
                     ],
                     'transactions_count' => $company->transactions->count(),
                     'booths_count' => $company->booths->count(),
@@ -205,6 +219,20 @@ class AdminController extends Controller
                         }),
                     'registered_at' => $company->created_at,
                     'last_activity' => $company->updated_at,
+                    'active_transaction' => $activeTransaction ? [
+                        'id' => $activeTransaction->id,
+                        'status' => $activeTransaction->status,
+                        'amount' => $activeTransaction->amount,
+                        'bukti_pembayaran' => $activeTransaction->bukti_pembayaran,
+                        'created_at' => $activeTransaction->created_at,
+                        'booth' => $activeTransaction->booth ? [
+                            'name' => $activeTransaction->booth->name,
+                            'size' => $activeTransaction->booth->size,
+                            'facility' => $activeTransaction->booth->facility,
+                            'price' => $activeTransaction->booth->price,
+                            'picture' => $activeTransaction->booth->picture,
+                        ] : null,
+                    ] : null,
                 ]
             ]);
             
@@ -214,6 +242,16 @@ class AdminController extends Controller
                 'message' => 'Gagal mengambil detail perusahaan: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function verifyTransaction(Transaction $transaction)
+    {
+        $transaction->status = 'approved';
+        $transaction->approved_by = auth()->id();
+        $transaction->approved_at = now();
+        $transaction->save();
+
+        return response()->json(['success' => true, 'message' => 'Pembayaran berhasil diverifikasi!']);
     }
 
     /**

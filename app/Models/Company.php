@@ -9,6 +9,12 @@ class Company extends Model
     protected $fillable = [
         'user_id',
         'logo',
+        'nib',
+        'npwp',
+        'address',
+        'pic',
+        'pic_position',
+        'pic_phone',
     ];
 
     public function user()

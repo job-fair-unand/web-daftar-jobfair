@@ -274,36 +274,89 @@
                 statusElement.innerHTML = '<span class="inline-block w-2 h-2 bg-yellow-500 rounded-full mr-2"></span>Belum Verifikasi';
             }
 
-            // Stats
-            document.getElementById('totalTransactions').textContent = data.transactions_count;
-            document.getElementById('totalBooths').textContent = data.booths_count;
-            
-            // Calculate days since joined
-            const joinedDate = new Date(data.registered_at);
-            const today = new Date();
-            const daysDiff = Math.floor((today - joinedDate) / (1000 * 60 * 60 * 24));
-            document.getElementById('daysSinceJoined').textContent = daysDiff;
-
             // Dates
             document.getElementById('registeredDate').textContent = new Date(data.registered_at).toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric'
             });
+
+            const companyData = data.company_data || {};
+            let companyDataHtml = `
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h5 class="font-semibold text-gray-900 mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 014-4h2a4 4 0 014 4v2"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7a4 4 0 018 0v4"></path>
+                        </svg>
+                        Data Perusahaan
+                    </h5>
+                    <div class="space-y-2">
+                        <div><span class="text-gray-500">NIB:</span> <span class="font-medium text-gray-900">${companyData.nib || '-'}</span></div>
+                        <div><span class="text-gray-500">NPWP:</span> <span class="font-medium text-gray-900">${companyData.npwp || '-'}</span></div>
+                        <div><span class="text-gray-500">Alamat Perusahaan:</span> <span class="font-medium text-gray-900">${companyData.address || '-'}</span></div>
+                        <div><span class="text-gray-500">Nama PIC:</span> <span class="font-medium text-gray-900">${companyData.pic || '-'}</span></div>
+                        <div><span class="text-gray-500">Jabatan PIC:</span> <span class="font-medium text-gray-900">${companyData.pic_position || '-'}</span></div>
+                        <div><span class="text-gray-500">No. Telepon PIC:</span> <span class="font-medium text-gray-900">${companyData.pic_phone || '-'}</span></div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('companyDataSection').innerHTML = companyDataHtml;
+
+            const bookingSection = document.getElementById('companyBookingSection');
+            if (data.active_transaction) {
+                bookingSection.innerHTML = `
+                    <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200 rounded-xl p-6 shadow mb-6">
+                        <div class="flex items-center mb-4">
+                            <svg class="w-6 h-6 text-emerald-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 10l9-7 9 7v7a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-7z"/>
+                            </svg>
+                            <h4 class="text-lg font-bold text-emerald-800">Detail Booking Booth</h4>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <div class="mb-2"><span class="font-medium">Nama Booth:</span> ${data.active_transaction.booth?.name || '-'}</div>
+                                <div class="mb-2"><span class="font-medium">Ukuran:</span> ${data.active_transaction.booth?.size || '-'}</div>
+                                <div class="mb-2"><span class="font-medium">Fasilitas:</span> ${data.active_transaction.booth?.facility || '-'}</div>
+                                <div class="mb-2"><span class="font-medium">Harga:</span> Rp. ${data.active_transaction.booth?.price?.toLocaleString('id-ID') || '-'}</div>
+                            </div>
+                            <div>
+                                <div class="mb-2"><span class="font-medium">Status:</span>
+                                    <span class="inline-block px-3 py-1 rounded-full text-white
+                                        ${data.active_transaction.status === 'pending' ? 'bg-yellow-500' : (data.active_transaction.status === 'approved' ? 'bg-green-600' : 'bg-gray-400')}">
+                                        ${getStatusText(data.active_transaction.status)}
+                                    </span>
+                                </div>
+                                <div class="mb-2"><span class="font-medium">Tanggal Booking:</span> ${new Date(data.active_transaction.created_at).toLocaleString('id-ID')}</div>
+                                ${data.active_transaction.bukti_pembayaran ? `
+                                    <div class="mb-2">
+                                        <span class="font-medium">Bukti Pembayaran:</span>
+                                        <a href="/storage/${data.active_transaction.bukti_pembayaran}" target="_blank" class="text-blue-600 underline">Lihat File</a>
+                                    </div>
+                                ` : ''}
+                                ${data.active_transaction.status === 'pending' ? `
+                                    <button onclick="verifyTransaction(${data.active_transaction.id})"
+                                        class="mt-4 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-semibold transition">
+                                        Verifikasi Pembayaran
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                bookingSection.innerHTML = `
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center text-gray-500 italic">
+                        Belum ada booking booth aktif.
+                    </div>
+                `;
+            }
             
             document.getElementById('emailVerified').textContent = data.user.email_verified_at 
                 ? new Date(data.user.email_verified_at).toLocaleDateString('id-ID')
                 : 'Belum diverifikasi';
-
-            document.getElementById('lastActivity').textContent = new Date(data.last_activity).toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-
-            document.getElementById('profileUpdated').textContent = new Date(data.last_activity).toLocaleDateString('id-ID');
 
             // Recent transactions
             const transactionsList = document.getElementById('transactionsList');
@@ -445,6 +498,41 @@
                             text: 'Terjadi kesalahan saat menghapus perusahaan',
                             confirmButtonColor: '#ef4444'
                         });
+                    });
+                }
+            });
+        }
+
+        function verifyTransaction(transactionId) {
+            Swal.fire({
+                title: 'Verifikasi Pembayaran?',
+                text: 'Pastikan bukti pembayaran sudah valid.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Verifikasi',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#059669'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/admin/transaction/${transactionId}/verify`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('Berhasil!', data.message, 'success').then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire('Gagal', data.message, 'error');
+                        }
+                    })
+                    .catch(() => {
+                        Swal.fire('Gagal', 'Terjadi kesalahan server', 'error');
                     });
                 }
             });

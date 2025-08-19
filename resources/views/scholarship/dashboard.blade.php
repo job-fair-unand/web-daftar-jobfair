@@ -5,7 +5,7 @@
 @section('content')
 <div class="p-6 bg-gray-50">
     <h1>
-        Dashboard UMKM
+        Dashboard Beasiswa
     </h1>
 </div>
 @endsection

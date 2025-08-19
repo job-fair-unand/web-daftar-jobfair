@@ -11,6 +11,8 @@
                 Sponsor Dashboard Job Fair
             @elseif(auth()->user()->role === 'umkm')
                 UMKM Dashboard Job Fair
+            @elseif(auth()->user()->role === 'scholarship')
+                Scholarship Dashboard Job Fair
             @endif
         @else
             Job Fair Universitas Andalas
@@ -35,6 +37,8 @@
                 @include('partials.sponsor.sidebar')
             @elseif(auth()->user()->role === 'umkm')
                 @include('partials.umkm.sidebar')
+            @elseif(auth()->user()->role === 'scholarship')
+                @include('partials.scholarship.sidebar')
             @endif
         @endif
         
